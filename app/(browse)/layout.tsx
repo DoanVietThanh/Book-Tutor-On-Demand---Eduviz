@@ -5,7 +5,7 @@ const BrowseLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="relative">
       <BrowseHeader />
-      <div className="flex h-screen flex-col pt-20">{children}</div>
+      <div className="flex h-screen flex-col pt-12">{children}</div>
     </div>
   );
 };

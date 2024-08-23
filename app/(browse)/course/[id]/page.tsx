@@ -16,7 +16,7 @@ type CourseDetailPageProps = {
 const CourseDetailPage = ({ params }: CourseDetailPageProps) => {
   return (
     <div>
-      <div className="flex w-full flex-1 overflow-hidden border">
+      <div className="flex w-full flex-1 overflow-hidden">
         <div className="w-1/5 border p-8 text-2xl">
           <p className="text-center font-semibold">Filter</p>
           <Input type="text" placeholder="Search tutor name" className="my-4 w-full" />

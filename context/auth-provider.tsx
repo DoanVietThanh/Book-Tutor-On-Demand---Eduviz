@@ -37,7 +37,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user: currentUser,
         isLoadingAuth,
-        // role: currentUser?.role?.roleName,
+        role: currentUser?.role?.roleName,
       }}
     >
       {children}
