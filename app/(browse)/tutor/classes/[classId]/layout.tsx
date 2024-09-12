@@ -23,7 +23,7 @@ const ClassDetailLayout = ({ children, params }: ClassDetailLayoutProps) => {
             <Link href={`/tutor/classes/${params.classId}/post`}>Post</Link>
           </Button>
           <Button asChild variant={"secondary"}>
-            <Link href={`/tutor/classes/${params.classId}/quizz`}>Create quiz</Link>
+            <Link href={`/tutor/classes/${params.classId}/quizz`}>Quiz</Link>
           </Button>
           <Button asChild variant={"destructive"}>
             <Link href={`/tutor/classes/${params.classId}/result`}>Result test</Link>
