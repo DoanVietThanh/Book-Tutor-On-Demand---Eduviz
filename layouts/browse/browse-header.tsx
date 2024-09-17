@@ -3,21 +3,28 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ROLES } from "@/enum";
+import { studentDropdownRoutes } from "@/constants/student-routes";
 import { tutorDropdownRoutes } from "@/constants/tutor-routes";
 import { useAuthContext } from "@/context/auth-provider";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const BrowseHeader = () => {
+  const router = useRouter();
   const { role, user, isLoadingAuth } = useAuthContext();
   console.log("🚀 ~ BrowseHeader ~ :", { role, user, isLoadingAuth });
 
-  // if (isLoadingAuth) return null;
+  if (isLoadingAuth) return null;
+
+  const handleLogout = () => {
+    router.push("/signin");
+  };
 
   return (
     <div className="fixed z-50 flex w-full items-center justify-between gap-4 p-2 border bg-white font-semibold shadow-lg">
@@ -41,13 +48,21 @@ const BrowseHeader = () => {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="min-w-32">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            {role == ROLES.TUTOR &&
+              tutorDropdownRoutes.map((route) => (
+                <Link key={route.name} href={route.href}>
+                  <DropdownMenuItem>{route.name}</DropdownMenuItem>
+                </Link>
+              ))}
+
+            {role == ROLES.STUDENT &&
+              studentDropdownRoutes.map((route) => (
+                <Link key={route.name} href={route.href}>
+                  <DropdownMenuItem>{route.name}</DropdownMenuItem>
+                </Link>
+              ))}
             <DropdownMenuSeparator />
-            {tutorDropdownRoutes.map((route) => (
-              <Link key={route.name} href={route.href}>
-                <DropdownMenuItem>{route.name}</DropdownMenuItem>
-              </Link>
-            ))}
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -1,7 +1,7 @@
 import BrowserSidebar from "@/layouts/browse/browser-sidebar";
 import { ReactNode } from "react";
 
-const TutorLayout = ({ children }: { children: ReactNode }) => {
+const StudentLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex h-full">
       <div className="w-1/6 border-r-2">
@@ -12,4 +12,4 @@ const TutorLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default TutorLayout;
+export default StudentLayout;

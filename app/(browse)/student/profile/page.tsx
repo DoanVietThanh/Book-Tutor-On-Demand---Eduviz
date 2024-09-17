@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
 import React from "react";
 
-const ProfilePage = () => {
+const StudentProfile = () => {
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
       <div>
@@ -28,4 +28,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default StudentProfile;

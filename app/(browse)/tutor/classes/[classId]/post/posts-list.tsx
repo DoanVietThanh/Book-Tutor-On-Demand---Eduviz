@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Send, Share, ThumbsUp } from "lucide-react";
+import { MessageCircle, Send, Share, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 
 const PostsList = () => {
@@ -64,9 +64,6 @@ const PostsList = () => {
               </Button>
               <Button variant={"secondary"} className="flex-1 text-gray-600 flex items-center gap-4 font-semibold">
                 <Send size={20} color="gray" /> Gửi
-              </Button>
-              <Button variant={"secondary"} className="flex-1 text-gray-600 flex items-center gap-4 font-semibold">
-                <Share size={20} color="gray" /> Chia sẻ
               </Button>
             </div>
           </section>

@@ -1,16 +1,23 @@
 "use client";
+import { ROLES } from "@/enum";
+import { studentDropdownRoutes } from "@/constants/student-routes";
 import { tutorDropdownRoutes } from "@/constants/tutor-routes";
+import { useAuthContext } from "@/context/auth-provider";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
-const TutorSidebar = () => {
+const BrowserSidebar = () => {
+  const { role, isLoadingAuth } = useAuthContext();
   const router = useRouter();
   const pathname = usePathname();
+
+  if (isLoadingAuth) return null;
+  let dropdownRoutes = role == ROLES.TUTOR ? tutorDropdownRoutes : studentDropdownRoutes;
 
   return (
     <div className="p-4">
       <div className="flex flex-col gap-4">
-        {tutorDropdownRoutes.map((route) => (
+        {dropdownRoutes.map((route) => (
           <div
             key={route.id}
             onClick={() => router.push(route.href)}
@@ -26,4 +33,4 @@ const TutorSidebar = () => {
   );
 };
 
-export default TutorSidebar;
+export default BrowserSidebar;
