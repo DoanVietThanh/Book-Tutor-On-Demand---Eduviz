@@ -1,14 +1,14 @@
 import React from "react";
 import Banner from "./_components/banner";
 import BrowseFooter from "@/layouts/browse/browse-footer";
-import CourseList from "./_components/course-list";
+import SubjectsList from "./_components/subjects-list";
 
 const HomePage = () => {
   return (
     <div>
       <div className="container min-h-[100vh]">
         <Banner />
-        <CourseList />
+        <SubjectsList />
       </div>
       <BrowseFooter />
     </div>
