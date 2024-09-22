@@ -1,6 +1,5 @@
 "use client";
 import { loginUser } from "@/actions/auth/login";
-import { getCurrentUser } from "@/actions/user/get-current-user";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -27,7 +26,7 @@ const SigninPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "student@gmail.com",
+      email: "mentor1@gmail.com",
       password: "123456",
     },
   });

@@ -12,7 +12,7 @@ const BrowserSidebar = () => {
   const pathname = usePathname();
 
   if (isLoadingAuth) return null;
-  let dropdownRoutes = role == ROLES.TUTOR ? tutorDropdownRoutes : studentDropdownRoutes;
+  let dropdownRoutes = role == ROLES.MENTOR ? tutorDropdownRoutes : studentDropdownRoutes;
 
   return (
     <div className="p-4">

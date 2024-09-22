@@ -1,4 +1,5 @@
 "use client";
+import CreateClassDialog from "@/components/dialogs/create-class-dialog";
 import SearchClass from "@/components/search-class";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,11 +8,12 @@ const ClassPage = () => {
   const router = useRouter();
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
-      <div className="flex justify-center">
+      <div className="w-full flex justify-between items-center">
         <SearchClass />
+        <CreateClassDialog />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {Array.from({ length: 50 }).map((_, index) => (
+        {Array.from({ length: 11 }).map((_, index) => (
           <div
             key={index}
             onClick={() => router.push(`/tutor/classes/${index + 1}`)}

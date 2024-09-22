@@ -5,29 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export type BaseError = {
-  statusCode: number;
-  message: string;
+export const getCurrentDate = () => {
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = date.getFullYear();
+  return `${year}-${month}-${day}`;
 };
 
-export function isBaseError(error: unknown): error is BaseError {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "statusCode" in error &&
-    typeof (error as BaseError).statusCode === "number" &&
-    "message" in error &&
-    typeof (error as BaseError).message === "string"
-  );
-}
+export const getCurrentTime = (increaseHours: number = 0) => {
+  const date = new Date();
+  const hours = String(date.getHours() + increaseHours).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
-export function getErrorMessage(error: unknown): string {
-  let messageError = "";
-  if (!isBaseError(error) || error.statusCode === 500) {
-    messageError = "An unknown error occurred. Please try again later.";
-  } else {
-    messageError = error.message;
-  }
+  return `${hours}:${minutes}:${seconds}`;
+};
 
-  return messageError;
-}
+export const formatStartDate = (date: string) => {
+  const dateObj = new Date(date);
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
+};

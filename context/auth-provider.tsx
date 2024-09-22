@@ -41,6 +41,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error: any) {
         toast.error(error.message);
+        router.push("/signin");
       }
     }
     fetchCurrentUser();
