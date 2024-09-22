@@ -2,14 +2,21 @@
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getCurrentUser = async (accessToken: string) => {
+type LoginRequest = {
+  email: string;
+  password: string;
+};
+export const loginUser = async ({ email, password }: LoginRequest) => {
   try {
-    const response = await fetch(`${ServerURL}/user/my-account`, {
-      method: "GET",
+    const response = await fetch(`${ServerURL}/auth/login`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     });
 
     const data = await response.json();

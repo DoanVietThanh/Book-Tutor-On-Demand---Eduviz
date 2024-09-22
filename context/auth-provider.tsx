@@ -1,43 +1,61 @@
 "use client";
 
-import { getCurrentUser } from "@/actions/user/user.action";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { getCurrentUser } from "@/actions/user/get-current-user";
+import { useRouter } from "next/navigation";
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 export type AuthContextType = {
-  //   user: UserWithRole | null;
   user: any;
   isLoadingAuth: boolean;
   role?: string;
+  accessToken: string;
+  setAccessToken: Dispatch<SetStateAction<string>>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  //   const [currentUser, setCurrentUser] = useState<UserWithRole | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [accessToken, setAccessToken] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("accessToken") || "";
+    }
+    return "";
+  });
+
   useEffect(() => {
     async function fetchCurrentUser() {
       try {
-        const response = await getCurrentUser();
-        console.log("🚀 ~ fetchCurrentUser ~ response:", response);
-        if (response) {
-          setCurrentUser(response);
-          setIsLoadingAuth(false);
+        if (accessToken) {
+          const response = await getCurrentUser(accessToken);
+          console.log("🚀 ~ fetchCurrentUser ~ response:", response);
+          if (response) {
+            setCurrentUser(response);
+            setIsLoadingAuth(false);
+          }
+        } else {
+          router.push("/signin");
         }
       } catch (error: any) {
         toast.error(error.message);
       }
     }
     fetchCurrentUser();
-  }, []);
+  }, [accessToken]);
+
+  console.log({ currentUser });
+
   return (
     <AuthContext.Provider
       value={{
         user: currentUser,
         isLoadingAuth,
-        role: currentUser?.role?.roleName,
+        role: currentUser?.role,
+        accessToken,
+        setAccessToken,
       }}
     >
       {children}

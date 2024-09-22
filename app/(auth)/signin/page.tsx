@@ -1,11 +1,16 @@
 "use client";
+import { loginUser } from "@/actions/auth/login";
+import { getCurrentUser } from "@/actions/user/get-current-user";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuthContext } from "@/context/auth-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -16,16 +21,27 @@ const formSchema = z.object({
 });
 
 const SigninPage = () => {
+  const router = useRouter();
+  const { setAccessToken } = useAuthContext();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "student@gmail.com",
+      password: "123456",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await loginUser(values);
+      setAccessToken(res.accessToken);
+      localStorage.setItem("accessToken", res.accessToken);
+      toast.success("Login successful");
+      router.push("/home");
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred while logging in");
+    }
   }
 
   return (

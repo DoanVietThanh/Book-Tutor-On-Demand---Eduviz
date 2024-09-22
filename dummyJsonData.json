@@ -1,0 +1,18 @@
+[
+  {
+    "email": "mentor1@gmail.com",
+    "password": "123456"
+  },
+  {
+    "email": "admin@gmail.com",
+    "password": "123456"
+  },
+  {
+    "email": "student@gmail.com",
+    "password": "123456"
+  },
+  {
+    "email": "vipmentor@gmail.com",
+    "password": "123456"
+  }
+]

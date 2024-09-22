@@ -23,6 +23,7 @@ const BrowseHeader = () => {
   if (isLoadingAuth) return null;
 
   const handleLogout = () => {
+    localStorage.clear();
     router.push("/signin");
   };
 
@@ -48,7 +49,7 @@ const BrowseHeader = () => {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="min-w-32">
-            {role == ROLES.TUTOR &&
+            {role == ROLES.MENTOR &&
               tutorDropdownRoutes.map((route) => (
                 <Link key={route.name} href={route.href}>
                   <DropdownMenuItem>{route.name}</DropdownMenuItem>

@@ -1,10 +1,9 @@
+import AuthProvider from "@/context/auth-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { ReactNode } from "react";
-import { ThemeProvider } from "@/context/theme-provider";
-import AuthProvider from "@/context/auth-provider";
-import { Toaster } from "sonner";
+import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           {children}
-          <Toaster position="top-right" richColors />
+          <Toaster position="top-right" richColors theme="light" />
         </AuthProvider>
       </body>
     </html>
