@@ -15,7 +15,11 @@ export const getCurrentDate = () => {
 
 export const getCurrentTime = (increaseHours: number = 0) => {
   const date = new Date();
-  const hours = String(date.getHours() + increaseHours).padStart(2, "0");
+
+  // Calculate the adjusted hours, ensuring it wraps correctly between 0 and 23
+  const totalHours = (date.getHours() + increaseHours) % 24;
+  const hours = String(totalHours).padStart(2, "0");
+
   const minutes = String(date.getMinutes()).padStart(2, "0");
   const seconds = String(date.getSeconds()).padStart(2, "0");
 

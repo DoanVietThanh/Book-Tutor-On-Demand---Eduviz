@@ -13,11 +13,18 @@ const PriceField = ({ form }: PriceProps) => {
       control={form.control}
       name="price"
       render={({ field }) => (
-        <FormItem className="w-1/6">
-          <div className="flex items-center gap-4">
+        <FormItem>
+          <div className="flex items-center justify-between gap-4">
             <FormLabel className="text-nowrap">Price</FormLabel>
             <FormControl>
-              <Input {...field} type="number" min={100} defaultValue={100} onChange={field.onChange} />
+              <Input
+                {...field}
+                className="flex-1"
+                type="number"
+                min={10000}
+                defaultValue={11000}
+                onChange={field.onChange}
+              />
             </FormControl>
           </div>
           <FormMessage />

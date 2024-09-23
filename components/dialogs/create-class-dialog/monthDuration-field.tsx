@@ -13,7 +13,7 @@ const MonthDurationField = ({ form }: MonthDurationFieldProps) => {
       control={form.control}
       name="monthDuration"
       render={({ field }) => (
-        <FormItem className="w-1/4">
+        <FormItem>
           <div className="flex items-center gap-4">
             <FormLabel className="text-nowrap">Month Duration</FormLabel>
             <FormControl>

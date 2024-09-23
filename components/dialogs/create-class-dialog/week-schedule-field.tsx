@@ -1,29 +1,23 @@
-import { Input } from "@/components/ui/input";
-import React from "react";
-import { FormReturn } from ".";
+import { getWeekSchedule } from "@/actions/course/get-week-schedule";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { getSubjectName } from "@/actions/subject/get-subjects";
-type SubjectNameFieldProps = {
+import { FormReturn } from ".";
+
+type WeekScheduleProps = {
   form: FormReturn;
 };
 
-interface ListSubject {
-  subjectId: string;
-  subjectName: string;
-}
-
-const SubjectNameField = ({ form }: SubjectNameFieldProps) => {
-  const [subjectName, setSubjectName] = useState<ListSubject[]>([]);
+const WeekScheduleField = ({ form }: WeekScheduleProps) => {
+  const [weekSchedule, setWeekSchedule] = useState<string[][]>([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const names = await getSubjectName();
-        setSubjectName(names || []);
+        const schedule = await getWeekSchedule();
+        setWeekSchedule(schedule || []);
       } catch (error) {
-        console.error("Failed to fetch subject name:", error);
+        console.error("Failed to fetch week schedule:", error);
       }
     }
     fetchData();
@@ -32,21 +26,21 @@ const SubjectNameField = ({ form }: SubjectNameFieldProps) => {
   return (
     <FormField
       control={form.control}
-      name="subjectName"
+      name="weekSchedule"
       render={({ field }) => (
         <FormItem>
           <div className="flex items-center justify-between gap-4">
-            <FormLabel className="text-nowrap">Subject Name</FormLabel>
+            <FormLabel className="text-nowrap">Schedule</FormLabel>
             <FormControl>
-              <Select value={field.value} onValueChange={(value) => field.onChange(value)}>
+              <Select value={JSON.stringify(field.value)} onValueChange={(value) => field.onChange(JSON.parse(value))}>
                 <SelectTrigger className="w-[280px]">
-                  <SelectValue placeholder="Select a subject name" />
+                  <SelectValue placeholder="Select a week schedule" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {subjectName.map((item) => (
-                      <SelectItem key={item.subjectId} value={item.subjectName}>
-                        {item.subjectName}
+                    {weekSchedule.map((item) => (
+                      <SelectItem key={JSON.stringify(item)} value={JSON.stringify(item)}>
+                        {item.join(" - ")}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -61,4 +55,4 @@ const SubjectNameField = ({ form }: SubjectNameFieldProps) => {
   );
 };
 
-export default SubjectNameField;
+export default WeekScheduleField;

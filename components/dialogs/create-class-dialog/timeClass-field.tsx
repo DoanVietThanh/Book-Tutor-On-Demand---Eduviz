@@ -14,7 +14,7 @@ const TimeClassField = ({ form, name }: TimeClassProps) => {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="w-1/2">
+        <FormItem>
           <div className="flex items-center gap-4">
             <FormLabel className="text-nowrap">
               {name === "beginingClass" ? "Begining Class" : "Ending Class"}

@@ -36,7 +36,7 @@ const SigninPage = () => {
       const res = await loginUser(values);
       setAccessToken(res.accessToken);
       localStorage.setItem("accessToken", res.accessToken);
-      toast.success("Login successful");
+      // toast.success("Login successful");
       router.push("/home");
     } catch (error: any) {
       toast.error(error.message || "An error occurred while logging in");

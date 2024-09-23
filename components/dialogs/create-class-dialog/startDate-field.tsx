@@ -13,7 +13,7 @@ const StartDateField = ({ form }: StartDateFieldProps) => {
       control={form.control}
       name="startDate"
       render={({ field }) => (
-        <FormItem className="w-1/2">
+        <FormItem>
           <div className="flex items-center gap-4">
             <FormLabel className="text-nowrap">Start Date</FormLabel>
             <FormControl className="w-full">
