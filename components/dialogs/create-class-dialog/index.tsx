@@ -58,13 +58,13 @@ const CreateClassDialog = () => {
   const form: FormReturn = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      courseName: "Java Thanh Doan",
-      subjectName: "Toan",
+      courseName: "",
+      subjectName: "",
       price: 11000,
-      startDate: "2024-09-26" || getCurrentDate(),
+      startDate: getCurrentDate(),
       monthDuration: 2,
-      beginingClass: "14:14:50" || getCurrentTime(),
-      endingClass: "16:14:50" || getCurrentTime(2),
+      beginingClass: getCurrentTime(),
+      endingClass: getCurrentTime(2),
       weekSchedule: ["Monday", "Wednesday", "Friday"],
       picture: null,
     },
