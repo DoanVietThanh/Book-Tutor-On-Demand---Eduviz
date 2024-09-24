@@ -34,8 +34,8 @@ const CoursesList = async () => {
           <section className="my-4 grid gap-8 md:grid-cols-4">
             {courseItem?.listCourse?.map((course: any) => (
               <Link key={course.courseId} href={`/course/${course.courseId}`}>
-                <div className="flex cursor-pointer flex-col gap-8 rounded-md border p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:font-semibold">
-                  <div className="flex items-center justify-center overflow-hidden">
+                <div className="h-full flex cursor-pointer flex-col justify-between  gap-8 rounded-md border p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:font-semibold">
+                  <div className="flex-1 flex items-center justify-center overflow-hidden">
                     <Image
                       src={isValidUrl(course.picture) ? course.picture : "/assets/avatar-tutor-2.png"}
                       alt="Avatar"
@@ -47,7 +47,7 @@ const CoursesList = async () => {
                   </div>
                   <div className="flex flex-col justify-start gap-4 text-sm">
                     <p className="text-xl font-semibold text-center">{course.courseName}</p>
-                    <p className="flex items-center gap-2 text-sm justify-end font-semibold">
+                    <p className="flex items-center gap-2 text-sm justify-center font-semibold">
                       <User size={16} fill="#f59e0b" />
                       by {course.mentorName}
                     </p>
