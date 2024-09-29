@@ -3,17 +3,12 @@
 import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-export const createCourse = async (data: any, accessToken: string) => {
+export const getPremiumPackage = async () => {
   try {
-    const response = await fetch(`${ServerURL}/course/create-course`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+    const response = await fetch(`${ServerURL}/payment/premium-package`, {
+      method: "GET",
     }).then((res) => res.json());
-    return response;
+    return response?.result;
   } catch (error) {
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {

@@ -11,7 +11,8 @@ import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  image: z.instanceof(File).nullable(),
+  num: z.number(),
+  image: z.instanceof(File, { message: "A picture is required." }),
 });
 
 const TestPage = () => {
@@ -19,19 +20,18 @@ const TestPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      image: null,
+      name: "Thanh Doan",
+      image: undefined,
+      num: 10,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formData = new FormData();
     formData.append("name", data.name);
-    if (data.image) {
-      formData.append("image", data.image);
-    }
-
-    const res = testCreateCourse(formData, accessToken);
+    formData.append("image", data.image);
+    formData.append("num", data.num.toString());
+    await testCreateCourse(formData);
   };
 
   return (
@@ -45,7 +45,25 @@ const TestPage = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input {...field} value={"Thanh Doan"} />
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="num"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Number</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    value={field.value}
+                    onChange={(event) => field.onChange(parseInt(event.target.value, 10) || 0)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

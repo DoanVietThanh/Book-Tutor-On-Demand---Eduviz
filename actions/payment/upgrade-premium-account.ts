@@ -3,16 +3,28 @@
 import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-export const createCourse = async (data: any, accessToken: string) => {
+
+type Request = {
+  mentorDetailID: string;
+  monthDuration: number;
+};
+
+export const upgradePremiumAccount = async (request: Request, accessToken: string) => {
   try {
-    const response = await fetch(`${ServerURL}/course/create-course`, {
+    const response = await fetch(`${ServerURL}/payment/upgrade-to-vip`, {
       method: "POST",
-      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({
+        mentorDetailID: request.mentorDetailID,
+        cancelUrl: process.env.PAYMENT_CANCEL_URL || "/localhost:3000",
+        returnUrl: process.env.PAYMENT_RETURN_URL || "/localhost:3000",
+        monthDuration: request.monthDuration,
+      }),
     }).then((res) => res.json());
+
     return response;
   } catch (error) {
     let messageError = "";

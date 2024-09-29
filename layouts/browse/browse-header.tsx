@@ -14,6 +14,8 @@ import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import UpgradePremiumDialog from "@/components/dialogs/upgrade-premium-dialog";
 
 const BrowseHeader = () => {
   const router = useRouter();
@@ -40,7 +42,8 @@ const BrowseHeader = () => {
           <div className="text-[#7A37FF]">Home Page</div>
         </Link>
       </div>
-      <div className="mr-8 flex items-center">
+      <div className="mr-8 flex items-center gap-4">
+        {user && role == ROLES.MENTOR && <UpgradePremiumDialog />}
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex items-center justify-center gap-2 h-full">
