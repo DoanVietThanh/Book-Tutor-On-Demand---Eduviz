@@ -1,7 +1,15 @@
+"use client";
 import SearchClass from "@/components/search-class";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAuthContext } from "@/context/auth-provider";
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Course } from "@/types/course";
+import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
+import { toast } from "sonner";
 
 type ClassDetailLayoutProps = {
   children: ReactNode;
@@ -9,12 +17,52 @@ type ClassDetailLayoutProps = {
 };
 
 const ClassDetailLayout = ({ children, params }: ClassDetailLayoutProps) => {
+  const router = useRouter();
+  const { user, accessToken } = useAuthContext();
+  const [coursesList, setCoursesList] = useState<Course[]>([]);
+
+  if (!user) {
+    return router.push("/signin");
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await getCourseByMentorId(user.mentorId, accessToken);
+        console.log("🚀 ~ fetchData ~ res:", res);
+        if (!res.success) {
+          toast.error("Get courses failed");
+          return;
+        }
+        setCoursesList(res?.result?.listRelativeCourse as Course[]);
+      } catch (error: any) {
+        toast.error(error?.message || "Something went wrong");
+      }
+    }
+    fetchData();
+  }, []);
+
+  console.log("🚀 ~ ClassDetailLayout ~ coursesList:", coursesList);
+
   return (
-    <div className="px-4 overflow-y-auto">
-      <div className="flex justify-between items-center border-b-2">
-        <div>
-          <SearchClass />
-        </div>
+    <div className="overflow-y-auto p-4">
+      <div className="flex justify-between items-center ">
+        <Select
+          onValueChange={(value) => {
+            router.push(`/tutor/classes/${value}`);
+          }}
+        >
+          <SelectTrigger className="w-1/2">
+            <SelectValue placeholder="Move to other courses" />
+          </SelectTrigger>
+          <SelectContent>
+            {coursesList.map((course) => (
+              <SelectItem key={course.courseId} value={course.courseId}>
+                {course.courseName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <div className="flex gap-8">
           <Button asChild variant={"secondary"}>
             <Link href={`/tutor/classes/${params.classId}`}>Overview</Link>

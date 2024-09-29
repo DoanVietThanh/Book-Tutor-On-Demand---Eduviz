@@ -25,8 +25,6 @@ const StudentProfile = () => {
           <p className="flex items-center justify-center gap-2">
             <User /> Thanh Doan
           </p>
-          <p>Experience: 10 years</p>
-          <p></p>
         </section>
       </div>
     </div>

@@ -1,6 +1,7 @@
-import { getCourses } from "@/actions/course/get-courses";
+import { getCourses, ListCourseWithSubjects } from "@/actions/course/get-courses";
 import { Badge } from "@/components/ui/badge";
 import { formatStartDate } from "@/lib/utils";
+import { Course } from "@/types/course";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +17,7 @@ const isValidUrl = (url: string) => {
 
 const CoursesList = async () => {
   try {
-    const coursesList = await getCourses();
+    const coursesList: ListCourseWithSubjects = await getCourses();
 
     if (!coursesList || coursesList.length === 0) {
       return <div>No courses available at the moment.</div>;
@@ -24,7 +25,7 @@ const CoursesList = async () => {
 
     return (
       <div>
-        {coursesList.map((courseItem: any) => (
+        {coursesList.map((courseItem: { subjectName: string; listCourse: Course[] }) => (
           <div key={courseItem.subjectName} className="my-8">
             <section className="flex items-center justify-between">
               <p className="text-2xl font-semibold">
@@ -33,7 +34,7 @@ const CoursesList = async () => {
             </section>
 
             <section className="my-4 grid gap-8 md:grid-cols-4">
-              {courseItem?.listCourse?.map((course: any) => (
+              {courseItem?.listCourse?.map((course: Course) => (
                 <Link key={course.courseId} href={`/course/${course.courseId}`}>
                   <div className="h-full flex cursor-pointer flex-col justify-between gap-8 rounded-md border p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105 hover:font-semibold">
                     <div className="flex-1 flex items-center justify-center overflow-hidden">
@@ -71,7 +72,7 @@ const CoursesList = async () => {
     );
   } catch (error) {
     console.error("Error fetching courses:", error);
-    return <div>Failed to load courses.</div>;
+    return <div>Failed to load courses. Please try again later.</div>;
   }
 };
 

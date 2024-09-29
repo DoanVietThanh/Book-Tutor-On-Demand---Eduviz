@@ -4,14 +4,6 @@ import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 export const purchaseCourse = async (courseId: string, accessToken: string) => {
-  console.log({ courseId, accessToken });
-  console.log(
-    JSON.stringify({
-      courseId: courseId,
-      cancelUrl: process.env.PAYMENT_CANCEL_URL || "/localhost:3000",
-      returnUrl: process.env.PAYMENT_RETURN_URL || "/localhost:3000",
-    })
-  );
   try {
     const response = await fetch(`${ServerURL}/payment/purchase-course`, {
       method: "POST",

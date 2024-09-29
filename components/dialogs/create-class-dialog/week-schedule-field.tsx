@@ -2,6 +2,7 @@ import { getWeekSchedule } from "@/actions/course/get-week-schedule";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { FormReturn } from ".";
 
 type WeekScheduleProps = {
@@ -16,8 +17,8 @@ const WeekScheduleField = ({ form }: WeekScheduleProps) => {
       try {
         const schedule = await getWeekSchedule();
         setWeekSchedule(schedule || []);
-      } catch (error) {
-        console.error("Failed to fetch week schedule:", error);
+      } catch (error: any) {
+        toast.error(error?.message || "Failed to fetch week schedule");
       }
     }
     fetchData();

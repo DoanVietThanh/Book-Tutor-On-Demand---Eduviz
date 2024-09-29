@@ -1,8 +1,11 @@
 "use server";
 
 import { isBaseError } from "@/lib/utils";
+import { Course } from "@/types/course";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
+
+export type ListCourseWithSubjects = { subjectName: string; listCourse: Course[] }[];
 
 export const getCourses = async () => {
   try {
@@ -13,7 +16,7 @@ export const getCourses = async () => {
       },
       cache: "no-store",
     }).then((res) => res.json());
-    return response.result?.listCourseWithSubjects;
+    return response.result?.listCourseWithSubjects as ListCourseWithSubjects;
   } catch (error: any) {
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {

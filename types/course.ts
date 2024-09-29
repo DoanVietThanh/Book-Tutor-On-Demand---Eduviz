@@ -12,4 +12,5 @@ export type Course = {
   beginingClass: string;
   endingClass: string;
   numOfStudents: number;
+  meetUrl: string;
 };

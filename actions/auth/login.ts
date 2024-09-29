@@ -1,5 +1,7 @@
 "use server";
 
+import { isBaseError } from "@/lib/utils";
+
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 
 type LoginRequest = {
@@ -28,6 +30,12 @@ export const loginUser = async ({ email, password }: LoginRequest) => {
 
     return data.result;
   } catch (error: any) {
-    throw new Error(error.message || "An error occurred while logging in");
+    let messageError = "";
+    if (!isBaseError(error) || error.statusCode === 500) {
+      messageError = "Something went wrong";
+    } else {
+      messageError = error.message;
+    }
+    throw new Error(messageError);
   }
 };

@@ -22,7 +22,7 @@ const ClassPage = () => {
         const res = await getCourseByMentorId(user?.mentorId, accessToken);
 
         if (!res.success) {
-          toast.error("Get courses failed");
+          toast.error(res?.result?.message || "Get courses failed");
           return;
         }
 
@@ -34,19 +34,18 @@ const ClassPage = () => {
     fetchData();
   }, []);
 
-  console.log({ courses: coursesList });
+  console.log("🚀 ~ ClassPage ~ coursesList:", coursesList);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
-      <div className="w-full flex justify-between items-center">
-        <SearchClass />
+      <div className="w-full flex justify-end items-center mb-8">
         <CreateClassDialog />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {coursesList?.map((courseItem, index) => (
           <div
             key={index}
-            onClick={() => router.push(`/tutor/classes/${index + 1}`)}
+            onClick={() => router.push(`/tutor/classes/${courseItem.courseId}`)}
             className="flex cursor-pointer rounded-md border bg-white p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105"
           >
             <Image

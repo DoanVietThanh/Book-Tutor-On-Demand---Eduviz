@@ -7,7 +7,7 @@ const TutorLayout = ({ children }: { children: ReactNode }) => {
       <div className="w-1/6 border-r-2">
         <BrowserSidebar />
       </div>
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      <div className="flex-1 overflow-y-auto pt-4">{children}</div>
     </div>
   );
 };
