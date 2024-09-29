@@ -14,7 +14,6 @@ type TutorInfoProps = {
 
 const InfoCourse = ({ courseDetail, relatedCourses }: TutorInfoProps) => {
   const [selectedPackage, setSelectedPackage] = useState(relatedCourses[0] ? relatedCourses[0] : courseDetail);
-  console.log("❤️❤️  ", { courseDetail, relatedCourses });
   return (
     <div className="flex flex-col gap-4">
       <section className="flex items-center justify-between gap-4 border p-8 shadow-md">
@@ -107,12 +106,12 @@ const InfoCourse = ({ courseDetail, relatedCourses }: TutorInfoProps) => {
                   </span>
                 </p>
 
-                <div>
+                {/* <div>
                   📅{" "}
-                  {selectedPackage?.schedule.map((item: any, index: number) => (
+                  {selectedPackage?.weekSchedule.map((item: any, index: number) => (
                     <span>{item} </span>
                   ))}
-                </div>
+                </div> */}
                 <p className="font-semibold ">
                   ⏰ {selectedPackage?.beginingClass} - {selectedPackage?.endingClass}
                 </p>

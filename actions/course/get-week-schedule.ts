@@ -10,7 +10,6 @@ export const getWeekSchedule = async () => {
         "Content-Type": "application/json",
       },
     }).then((res) => res.json());
-    console.log("🚀 ~ getWeekSchedule ~ response:", response);
     return response.result?.weekSchedule;
   } catch (error: any) {
     throw new Error(error.message || "Something went wrong");

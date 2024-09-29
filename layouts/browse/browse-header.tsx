@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 const BrowseHeader = () => {
   const router = useRouter();
   const { role, user, isLoadingAuth } = useAuthContext();
-  console.log("🚀 ~ BrowseHeader ~ :", { role, user, isLoadingAuth });
 
   if (isLoadingAuth) return null;
 

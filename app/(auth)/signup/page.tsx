@@ -33,9 +33,7 @@ const SignupPage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  function onSubmit(values: z.infer<typeof formSchema>) {}
 
   return (
     <div className="h-[100vh] w-[100vw] overflow-hidden flex justify-center items-center bg-[url('/assets/background.jpg')] bg-cover bg-center">

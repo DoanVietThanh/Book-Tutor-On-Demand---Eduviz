@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const getCurrentDate = () => {
   const date = new Date();
   const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${year}-${month}-${day}`;
 };
@@ -33,3 +33,19 @@ export const formatStartDate = (date: string) => {
   const year = dateObj.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export type BaseError = {
+  statusCode: number;
+  message: string;
+};
+
+export function isBaseError(error: unknown): error is BaseError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "statusCode" in error &&
+    typeof (error as BaseError).statusCode === "number" &&
+    "message" in error &&
+    typeof (error as BaseError).message === "string"
+  );
+}

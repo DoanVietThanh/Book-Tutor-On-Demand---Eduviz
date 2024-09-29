@@ -1,14 +1,11 @@
 import { getCourses } from "@/actions/course/get-courses";
-import { Button } from "@/components/ui/button";
 import { formatStartDate } from "@/lib/utils";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const CoursesList = async () => {
   const coursesList = await getCourses();
-  console.log("🚀 ~ CoursesList ~ coursesList:", coursesList);
 
   if (!coursesList) return null;
 

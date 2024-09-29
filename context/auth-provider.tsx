@@ -31,7 +31,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         if (accessToken) {
           const response = await getCurrentUser(accessToken);
-          console.log("🚀 ~ fetchCurrentUser ~ response:", response);
           if (response) {
             setCurrentUser(response);
             setIsLoadingAuth(false);
@@ -46,8 +45,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     fetchCurrentUser();
   }, [accessToken]);
-
-  console.log({ currentUser });
 
   return (
     <AuthContext.Provider

@@ -12,7 +12,6 @@ const EmojiInput = ({ onChange }: EmojiInputProps) => {
       <Picker
         data={data}
         onEmojiSelect={(emoji: any) => {
-          console.log("Selected emoji:", emoji);
           onChange(emoji.native); // Use emoji.native to set the emoji's actual character
         }}
       />

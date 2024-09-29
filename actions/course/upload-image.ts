@@ -1,21 +1,20 @@
-"use server";
-
 import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-export const createCourse = async (data: any, accessToken: string) => {
+export const uploadImage = async (picture: File, accessToken: string) => {
   try {
-    const response = await fetch(`${ServerURL}/course/create-course`, {
+    const formData: FormData = new FormData();
+    formData.append("image", picture);
+    const response = await fetch(`${ServerURL}/picture/upload-image`, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: formData,
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.json());
+
     return response;
   } catch (error) {
-    console.log("  ~ createCourse ~ error:", error);
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {
       messageError = "Something went wrong 123";

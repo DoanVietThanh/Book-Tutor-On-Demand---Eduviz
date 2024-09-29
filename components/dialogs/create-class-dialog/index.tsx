@@ -18,6 +18,8 @@ import PictureField from "./picture-field";
 import { createCourse } from "@/actions/course/create-course";
 import { toast } from "sonner";
 import { useAuthContext } from "@/context/auth-provider";
+import { uploadImage } from "@/actions/course/upload-image";
+import { useState, useTransition } from "react";
 
 export type FormRequest = {
   courseName: string;
@@ -28,7 +30,7 @@ export type FormRequest = {
   beginingClass: string;
   endingClass: string;
   weekSchedule: string[];
-  picture: File | null;
+  picture: File;
 };
 
 export type FormReturn = UseFormReturn<FormRequest, any, undefined>;
@@ -50,15 +52,18 @@ const formSchema = z.object({
   beginingClass: z.string(),
   endingClass: z.string(),
   weekSchedule: z.array(z.string()),
-  picture: z.instanceof(File).nullable(),
+  picture: z.instanceof(File, { message: "A picture is required." }),
 });
 
 const CreateClassDialog = () => {
   const { accessToken } = useAuthContext();
+  const [open, setOpen] = useState(false);
+  const [isPending, startCreateCourse] = useTransition();
+
   const form: FormReturn = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      courseName: "",
+      courseName: "New course",
       subjectName: "",
       price: 11000,
       startDate: getCurrentDate(),
@@ -66,43 +71,47 @@ const CreateClassDialog = () => {
       beginingClass: getCurrentTime(),
       endingClass: getCurrentTime(2),
       weekSchedule: ["Monday", "Wednesday", "Friday"],
-      picture: null,
+      picture: undefined,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("🚀 ~ onSubmit ~ values:", values);
     try {
-      const formData = new FormData();
-      formData.append("courseName", values.courseName);
-      formData.append("subjectName", values.subjectName);
-      formData.append("price", values.price.toString());
-      formData.append("startDate", values.startDate);
-      formData.append("monthDuration", values.monthDuration.toString());
-      formData.append("beginingClass", values.beginingClass);
-      formData.append("endingClass", values.endingClass);
-      formData.append("weekSchedule", JSON.stringify(values.weekSchedule));
-
-      if (values.picture) {
-        formData.append("picture", values.picture);
-      }
-
-      const response = await createCourse(formData, accessToken);
-      console.log("🚀 ~ onSubmit ~ response:", response);
-      // if (response.message) {
-      //   toast.error(response.message || "Class created successfully");
-      //   form.reset();
-      // } else {
-      //   toast.success("Class created successfully");
-      //   form.reset();
-      // }
+      startCreateCourse(async () => {
+        const uploadedImage = await uploadImage(values.picture, accessToken);
+        if (uploadedImage.success) {
+          const response = await createCourse(
+            {
+              ...values,
+              price: values.price.toString(),
+              monthDuration: values.monthDuration.toString(),
+              picture: uploadedImage?.result?.imageUrl,
+            },
+            accessToken
+          );
+          if (!response.success || response?.result?.message) {
+            toast.error(response?.result?.message || "Create course failed");
+          } else {
+            toast.success("Create course successfully");
+            form.reset();
+          }
+        } else {
+          toast.error("Upload picture of Course failed");
+        }
+      });
     } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error?.message || "Something went wrong");
     }
   }
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={() => {
+        setOpen(!open);
+        form.reset();
+      }}
+    >
       <Button asChild variant={"destructive"}>
         <DialogTrigger className="flex items-center gap-4">
           <PlusCircle /> New Class
@@ -125,7 +134,7 @@ const CreateClassDialog = () => {
               <TimeClassField form={form} name={"endingClass"} />
               <PictureField form={form} />
             </div>
-            <Button type="submit" className="w-full mt-24">
+            <Button type="submit" disabled={isPending} className="w-full mt-24">
               Create
             </Button>
           </form>
