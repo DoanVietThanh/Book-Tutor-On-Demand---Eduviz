@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,6 +25,8 @@ const formSchema = z
   });
 
 const SignupPage = () => {
+  const [isPending, startSignup] = useTransition();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -100,7 +103,7 @@ const SignupPage = () => {
                   log in
                 </Link>
               </div>
-              <Button type="submit" className="w-full uppercase">
+              <Button type="submit" disabled={isPending} className="w-full uppercase">
                 Sign Up
               </Button>
             </form>

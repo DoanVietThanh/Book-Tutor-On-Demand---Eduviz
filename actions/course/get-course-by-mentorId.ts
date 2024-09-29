@@ -3,26 +3,17 @@
 import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-
-export const getCurrentUser = async (accessToken: string) => {
+export const getCourseByMentorId = async (mentorId: string, accessToken: string) => {
   try {
-    const response = await fetch(`${ServerURL}/user/my-account`, {
+    const response = await fetch(`${ServerURL}/course/${mentorId}/get-by-mentor`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const errorMessage = data.result?.message || "An unexpected error occurred";
-      throw new Error(errorMessage);
-    }
-
-    return data.result;
-  } catch (error: any) {
+    }).then((res) => res.json());
+    return response;
+  } catch (error) {
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {
       messageError = "Something went wrong";

@@ -1,4 +1,5 @@
 import { getCourses } from "@/actions/course/get-courses";
+import { Badge } from "@/components/ui/badge";
 import { formatStartDate } from "@/lib/utils";
 import { User } from "lucide-react";
 import Image from "next/image";
@@ -36,13 +37,13 @@ const CoursesList = async () => {
                     <Image
                       src={isValidUrl(course.picture) ? course.picture : "/assets/avatar-tutor-2.png"}
                       alt="Avatar"
-                      width={100}
-                      height={100}
+                      width={160}
+                      height={160}
                       layout="intrinsic"
                       className="rounded-md"
                     />
                   </div>
-                  <div className="flex flex-col justify-start gap-4 text-sm">
+                  <div className="flex flex-col justify-start gap-4 text-md">
                     <p className="text-xl font-semibold text-center">{course.courseName}</p>
                     <p className="flex items-center gap-2 text-sm justify-center font-semibold">
                       <User size={16} fill="#f59e0b" />
@@ -53,8 +54,8 @@ const CoursesList = async () => {
                       {course.price.toLocaleString()} / hour
                     </div>
                     <p className="flex justify-between font-medium">
-                      <span>Start: {formatStartDate(course.startDate)}</span>
-                      <span>{course.duration} months</span>
+                      <span>📅 {formatStartDate(course.startDate)}</span>
+                      <Badge variant={"secondary"}>{course.duration} months</Badge>
                     </p>
                   </div>
                 </div>

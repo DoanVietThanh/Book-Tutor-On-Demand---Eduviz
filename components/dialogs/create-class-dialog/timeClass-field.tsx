@@ -17,7 +17,7 @@ const TimeClassField = ({ form, name }: TimeClassProps) => {
         <FormItem>
           <div className="flex items-center gap-4">
             <FormLabel className="text-nowrap">
-              {name === "beginingClass" ? "Begining Class" : "Ending Class"}
+              {name === "beginingClass" ? "Begining Course" : "Ending Course"}
             </FormLabel>
             <FormControl>
               <Input {...field} type="time" defaultValue={field.value} onChange={field.onChange} />

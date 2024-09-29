@@ -1,5 +1,7 @@
 "use server";
 
+import { isBaseError } from "@/lib/utils";
+
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getSubjectName = async () => {
@@ -12,6 +14,12 @@ export const getSubjectName = async () => {
     }).then((res) => res.json());
     return response?.result?.listSubject;
   } catch (error: any) {
-    throw new Error(error.message || "Something went wrong");
+    let messageError = "";
+    if (!isBaseError(error) || error.statusCode === 500) {
+      messageError = "Something went wrong";
+    } else {
+      messageError = error.message;
+    }
+    throw new Error(messageError);
   }
 };

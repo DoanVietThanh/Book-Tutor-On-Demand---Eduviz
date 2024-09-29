@@ -17,7 +17,7 @@ export const createCourse = async (data: any, accessToken: string) => {
   } catch (error) {
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {
-      messageError = "Something went wrong 123";
+      messageError = "Something went wrong";
     } else {
       messageError = error.message;
     }

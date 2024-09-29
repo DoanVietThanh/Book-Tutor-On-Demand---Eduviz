@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuthContext } from "@/context/auth-provider";
 import { PremiumPackageInfo } from "@/types/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
@@ -82,7 +82,7 @@ const UpgradePremiumDialog = () => {
     >
       <Button asChild variant={"destructive"}>
         <DialogTrigger className="flex items-center gap-4">
-          <PlusCircle /> Upgrade Premium Account
+          <Star color="yellow" fill="yellow" /> Upgrade Premium Account
         </DialogTrigger>
       </Button>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] m-8">

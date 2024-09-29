@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -21,6 +22,7 @@ const formSchema = z.object({
 
 const SigninPage = () => {
   const router = useRouter();
+  const [isPending, startLogin] = useTransition();
   const { setAccessToken } = useAuthContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,10 +35,11 @@ const SigninPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await loginUser(values);
-      setAccessToken(res.accessToken);
-      localStorage.setItem("accessToken", res.accessToken);
-      // toast.success("Login successful");
+      startLogin(async () => {
+        const res = await loginUser(values);
+        setAccessToken(res.accessToken);
+        localStorage.setItem("accessToken", res.accessToken);
+      });
       router.push("/home");
     } catch (error: any) {
       toast.error(error.message || "An error occurred while logging in");
@@ -92,7 +95,7 @@ const SigninPage = () => {
                   sign up
                 </Link>
               </div>
-              <Button type="submit" className="w-full uppercase">
+              <Button type="submit" disabled={isPending} className="w-full uppercase">
                 Log In
               </Button>
             </form>

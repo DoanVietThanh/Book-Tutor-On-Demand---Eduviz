@@ -1,9 +1,16 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useAuthContext } from "@/context/auth-provider";
+import { formatStartDate } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { User } from "lucide-react";
 import Image from "next/image";
-import React from "react";
-
 const ProfilePage = () => {
+  const { user } = useAuthContext();
+  console.log("🚀 ~ ProfilePage ~ user:", user);
+
   return (
     <div className="p-4 min-h-[100vh] bg-slate-50 overflow-y-auto">
       <div className="bg-white p-4 rounded-lg">
@@ -25,8 +32,23 @@ const ProfilePage = () => {
           <p className="flex items-center justify-center gap-2">
             <User /> Thanh Doan
           </p>
-          <p>Experience: 10 years</p>
-          <p></p>
+          {!user?.isVip && (
+            <p>
+              <Badge variant={"green"}> Normal Account </Badge>
+            </p>
+          )}
+          {user?.isVip && (
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge variant={"yellow"}>⭐ VIP ACCOUNT ⭐</Badge>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Expire Date: {formatStartDate(user?.expiredDate.toString())}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </section>
       </div>
     </div>
