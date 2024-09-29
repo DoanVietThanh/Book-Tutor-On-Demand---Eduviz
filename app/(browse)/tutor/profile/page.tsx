@@ -9,7 +9,10 @@ import { User } from "lucide-react";
 import Image from "next/image";
 const ProfilePage = () => {
   const { user } = useAuthContext();
-  console.log("🚀 ~ ProfilePage ~ user:", user);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="p-4 min-h-[100vh] bg-slate-50 overflow-y-auto">

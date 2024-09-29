@@ -11,5 +11,5 @@ export type Course = {
   weekSchedule: string[];
   beginingClass: string;
   endingClass: string;
-  numOfStudents?: number;
+  numOfStudents: number;
 };

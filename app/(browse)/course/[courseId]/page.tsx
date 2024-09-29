@@ -19,7 +19,7 @@ const CourseDetail = async ({ params }: CourseDetailProps) => {
     <div>
       <div className="container my-4 flex flex-col gap-8">
         <BreadcumCourse tutorName={courseDetail.mentorName} />
-        <InfoCourse courseDetail={courseDetail} relatedCourses={relatedCourses} />
+        <InfoCourse courseId={params.courseId} courseDetail={courseDetail} relatedCourses={relatedCourses} />
       </div>
       <BrowseFooter />
     </div>
