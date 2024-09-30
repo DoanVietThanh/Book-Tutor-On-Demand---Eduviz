@@ -42,8 +42,6 @@ const ClassDetailLayout = ({ children, params }: ClassDetailLayoutProps) => {
     fetchData();
   }, []);
 
-  console.log("🚀 ~ ClassDetailLayout ~ coursesList:", coursesList);
-
   return (
     <div className="overflow-y-auto p-4">
       <div className="flex justify-between items-center ">

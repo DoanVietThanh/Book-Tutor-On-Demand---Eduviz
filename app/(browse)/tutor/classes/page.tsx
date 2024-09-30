@@ -1,7 +1,6 @@
 "use client";
 import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
 import CreateClassDialog from "@/components/dialogs/create-class-dialog";
-import SearchClass from "@/components/search-class";
 import { Badge } from "@/components/ui/badge";
 import { useAuthContext } from "@/context/auth-provider";
 import { formatStartDate } from "@/lib/utils";

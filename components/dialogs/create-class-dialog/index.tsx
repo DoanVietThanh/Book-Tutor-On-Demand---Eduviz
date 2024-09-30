@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { useAuthContext } from "@/context/auth-provider";
 import { uploadImage } from "@/actions/course/upload-image";
 import { useState, useTransition } from "react";
+import MeetUrlField from "./meet-url-field";
 
 export type FormRequest = {
   courseName: string;
@@ -29,6 +30,7 @@ export type FormRequest = {
   monthDuration: number;
   beginingClass: string;
   endingClass: string;
+  meetUrl: string;
   weekSchedule: string[];
   picture: File;
 };
@@ -45,13 +47,24 @@ const formSchema = z.object({
   price: z.coerce.number().min(10000, {
     message: "Price must be at least 100k VND.",
   }),
-  startDate: z.string(),
+  startDate: z.string({
+    required_error: "Start date is required.",
+  }),
   monthDuration: z.coerce.number().min(1, {
     message: "Month duration must be at least 1 month.",
   }),
-  beginingClass: z.string(),
-  endingClass: z.string(),
+  beginingClass: z.string({
+    required_error: "Begining class time is required.",
+  }),
+  endingClass: z.string({
+    required_error: "Ending class time is required.",
+  }),
   weekSchedule: z.array(z.string()),
+  meetUrl: z
+    .string({
+      required_error: "Meet URL is required.",
+    })
+    .min(1, { message: "Meet URL is required." }),
   picture: z.instanceof(File, { message: "A picture is required." }),
 });
 
@@ -63,13 +76,14 @@ const CreateClassDialog = () => {
   const form: FormReturn = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      courseName: "New course",
+      courseName: "",
       subjectName: "",
       price: 11000,
       startDate: getCurrentDate(),
-      monthDuration: 2,
+      monthDuration: 1,
       beginingClass: getCurrentTime(),
       endingClass: getCurrentTime(2),
+      meetUrl: "",
       weekSchedule: ["Monday", "Wednesday", "Friday"],
       picture: undefined,
     },
@@ -94,6 +108,7 @@ const CreateClassDialog = () => {
           } else {
             toast.success("Create course successfully");
             form.reset();
+            setOpen(false);
           }
         } else {
           toast.error("Upload picture of Course failed");
@@ -131,7 +146,8 @@ const CreateClassDialog = () => {
               <MonthDurationField form={form} />
               <StartDateField form={form} />
               <TimeClassField form={form} name={"beginingClass"} />
-              <TimeClassField form={form} name={"endingClass"} />
+              <TimeClassField form={form} name={"endingClass"} />\
+              <MeetUrlField form={form} />
               <PictureField form={form} />
             </div>
             <div className="flex justify-end">

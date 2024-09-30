@@ -11,6 +11,7 @@ export const getWeekSchedule = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }).then((res) => res.json());
     return response.result?.weekSchedule;
   } catch (error: any) {

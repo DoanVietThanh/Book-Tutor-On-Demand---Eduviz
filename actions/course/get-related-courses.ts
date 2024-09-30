@@ -11,6 +11,7 @@ export const getRelatedCourses = async (courseId: string) => {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }).then((res) => res.json());
     return response?.result?.listRelativeCourse;
   } catch (error: any) {

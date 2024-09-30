@@ -1,6 +1,7 @@
 "use server";
 
 import { isBaseError } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 export const createCourse = async (data: any, accessToken: string) => {
@@ -13,6 +14,7 @@ export const createCourse = async (data: any, accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.json());
+    revalidatePath("/tutor/classes");
     return response;
   } catch (error) {
     let messageError = "";

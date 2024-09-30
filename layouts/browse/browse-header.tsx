@@ -1,4 +1,5 @@
 "use client";
+import UpgradePremiumDialog from "@/components/dialogs/upgrade-premium-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,16 +7,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ROLES } from "@/enum";
 import { studentDropdownRoutes } from "@/constants/student-routes";
 import { tutorDropdownRoutes } from "@/constants/tutor-routes";
 import { useAuthContext } from "@/context/auth-provider";
+import { ROLES } from "@/enum";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import UpgradePremiumDialog from "@/components/dialogs/upgrade-premium-dialog";
 
 const BrowseHeader = () => {
   const router = useRouter();

@@ -1,3 +1,4 @@
+import { getCourseClassDetail } from "@/actions/course/get-course-class-detail";
 import { getCourseDetail } from "@/actions/course/get-course-detail";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -12,19 +13,25 @@ type TutorClassDetailProps = {
 const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
   const courseDetail: Course = await getCourseDetail(params.classId);
 
-  if (!courseDetail) {
+  const courseClassDetail = await getCourseClassDetail(params.classId);
+
+  if (!courseDetail || !courseClassDetail) {
     return <div>Course not found</div>;
   }
-  console.log("🚀 ~ TutorClassDetail ~ courseDetail:", courseDetail);
 
   return (
     <div className="pt-4 overflow-y-auto">
-      <div>Course ID {params.classId}</div>
-
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-8">
         <section className="w-1/2 flex items-center justify-center  gap-8 p-8 bg-slate-50 rounded-md overflow-hidden shadow-lg">
-          <Image src={courseDetail.picture} alt="banner" width={180} height={300} className="rounded-md shadow-md" />
+          <Image
+            src={courseDetail.picture || "/assets/avatar-tutor-2.png"}
+            alt="banner"
+            width={240}
+            height={400}
+            className="rounded-md shadow-md"
+          />
           <div>
+            <div className="text-2xl font-semibold"> {courseDetail.courseName}</div>
             <div>{courseDetail.weekSchedule.toString()}</div>
             <div>🧑‍🎓 {courseDetail.numOfStudents} (students)</div>
             <div className="font-semibold">
@@ -36,27 +43,32 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
                 {courseDetail.duration} months
               </Badge>
             </div>
+            <Badge variant={"green"}>
+              <a href={`https://${courseClassDetail?.meetUrl}`} target="_blank" rel="noopener noreferrer">
+                {courseClassDetail?.meetUrl}
+              </a>
+            </Badge>
           </div>
         </section>
       </div>
 
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>A list of registered students.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">STT</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Age</TableHead>
+            <TableHead>Num of tests</TableHead>
             <TableHead className="text-right">Average Point</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <TableRow key={index}>
+          {courseClassDetail?.studentInfoList?.map((student: any, index: number) => (
+            <TableRow key={student?.studentId}>
               <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>John Doe</TableCell>
-              <TableCell>20</TableCell>
-              <TableCell className="text-right">5.8</TableCell>
+              <TableCell>{student.name}</TableCell>
+              <TableCell>{student.numOfTry}</TableCell>
+              <TableCell className="text-right">{student.score || 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>

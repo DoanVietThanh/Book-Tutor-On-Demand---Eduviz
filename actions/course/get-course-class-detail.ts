@@ -4,9 +4,9 @@ import { isBaseError } from "@/lib/utils";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getCourseDetail = async (courseId: string) => {
+export const getCourseClassDetail = async (courseId: string) => {
   try {
-    const response = await fetch(`${ServerURL}/course/detail/${courseId}`, {
+    const response = await fetch(`${ServerURL}/course/class-detail/${courseId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

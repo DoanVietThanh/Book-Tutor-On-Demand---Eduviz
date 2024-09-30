@@ -22,7 +22,6 @@ type TutorInfoProps = {
 
 const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) => {
   const { accessToken, role } = useAuthContext();
-  console.log("🚀 ~ InfoCourse ~ role:", role);
   const router = useRouter();
   const [isPending, startPurchaseCourse] = useTransition();
 
@@ -95,8 +94,8 @@ const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) 
                               `https://images.viblo.asia/1d949589-afdd-4a1e-b77f-c53fdaf8af13.png`
                             }
                             alt="Avatar"
-                            width={160}
-                            height={120}
+                            width={100}
+                            height={100}
                             className="rounded-md"
                           />
                         </div>
@@ -120,8 +119,8 @@ const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) 
               <Image
                 src={courseDetail.picture || `https://images.viblo.asia/1d949589-afdd-4a1e-b77f-c53fdaf8af13.png`}
                 alt="Avatar"
-                width={200}
-                height={160}
+                width={140}
+                height={100}
                 className="rounded-md"
               />
               <div className="mx-2 flex flex-col gap-2 w-full">

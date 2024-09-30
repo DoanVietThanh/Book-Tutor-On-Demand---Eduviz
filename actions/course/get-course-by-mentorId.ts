@@ -11,6 +11,7 @@ export const getCourseByMentorId = async (mentorId: string, accessToken: string)
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      cache: "no-store",
     }).then((res) => res.json());
     return response;
   } catch (error) {
