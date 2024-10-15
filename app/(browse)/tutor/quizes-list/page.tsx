@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Download, PlusCircle } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { saveAs } from "file-saver";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import {
@@ -15,9 +15,80 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useAuthContext } from "@/context/auth-provider";
+import { toast } from "sonner";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getCurrentTime } from "@/lib/utils";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Course } from "@/types/course";
+import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
+import { createQuiz } from "@/actions/quiz/create-quiz";
+import { getQuizByClass } from "@/actions/quiz/get-quiz-by-class";
+
+type CreateQuizRequest = {
+  quizTitle: string;
+  duration: string;
+  courseId: string;
+  file: File;
+};
+
+type FormReturn = UseFormReturn<CreateQuizRequest, any, undefined>;
+
+const formSchema = z.object({
+  quizTitle: z.string().min(1, { message: "Quiz title is required." }),
+  duration: z.string().min(1, { message: "Duration is required." }),
+  courseId: z.string().min(1, { message: "Course is required." }),
+  file: z.instanceof(File, { message: "A picture is required." }),
+});
 
 const TutorQuizesList = () => {
+  const { user, accessToken } = useAuthContext();
   const [numQuestions, setNumQuestions] = useState<number>(10);
+  const [isCreateQuizPending, startCreateQuiz] = useTransition();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [quizes, setQuizes] = useState([]);
+
+  const form: FormReturn = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      quizTitle: "",
+      courseId: "",
+      duration: getCurrentTime(),
+      file: undefined,
+    },
+  });
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await getCourseByMentorId(user.mentorId, accessToken);
+        const coursesList = response?.result?.listRelativeCourse || [];
+
+        setCourses(coursesList);
+
+        if (coursesList.length > 0) {
+          const courseIds = coursesList.map((course: any) => course.courseId);
+          const quizzesPromises = courseIds.map((courseId: string) => getQuizByClass(courseId, accessToken));
+
+          const quizzes: any = await Promise.all(quizzesPromises);
+          setQuizes(quizzes);
+
+          console.log("🚀 ~ fetchCourses ~ quizzes:", quizzes);
+        } else {
+          setQuizes([]); // Ensure quizzes are reset if no courses are found
+        }
+      } catch (error) {
+        console.error("Failed to fetch courses or quizzes:", error);
+      }
+    };
+
+    if (user?.mentorId && accessToken) {
+      fetchCourses();
+    }
+  }, [user?.mentorId, accessToken]);
 
   const handleDownload = async () => {
     const questions = [];
@@ -42,7 +113,8 @@ const TutorQuizesList = () => {
             }),
           ],
         }),
-        ...answers
+        ...answers,
+        new Paragraph({ text: "Correct Answer: " })
       );
     }
     // Convert questions to docx
@@ -59,6 +131,24 @@ const TutorQuizesList = () => {
     const blob = await Packer.toBlob(doc);
     saveAs(blob, "questions.docx");
   };
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    startCreateQuiz(async () => {
+      try {
+        const res = await createQuiz(values, accessToken);
+        if (!res.success) {
+          toast.error(res?.result.message || "Create quiz failed");
+          return;
+        }
+        toast.success("Create quiz successfully");
+        form.reset();
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
+    });
+  }
+
+  console.log("🚀 ~ TutorQuizesList ~ quizes:", quizes);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
@@ -111,24 +201,101 @@ const TutorQuizesList = () => {
             <DialogHeader>
               <DialogTitle>Select doc file to upload</DialogTitle>
             </DialogHeader>
-            <div>
-              <div className="flex items-center gap-4">
-                <Label htmlFor="file-upload" className="text-nowrap">
-                  Upload
-                </Label>
-                <Input id="file-upload" type="file" className="w-full" />
-              </div>
-              <Button
-                variant={"destructive"}
-                onClick={() => {}}
-                className="mt-4 w-full flex items-center justify-center gap-4"
-              >
-                Create Quiz
-              </Button>
+            <div className="flex flex-col gap-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <FormField
+                    control={form.control}
+                    name="quizTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Quiz title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Quiz title" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="courseId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Course</FormLabel>
+                        <FormControl>
+                          <Select value={field.value} onValueChange={(value) => field.onChange(value)}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a subject name" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {courses.map((course) => (
+                                  <SelectItem key={course.courseId} value={course.courseId}>
+                                    {course.courseName}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="duration"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FormLabel className="text-nowrap">Duration</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="time" defaultValue={field.value} onChange={field.onChange} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="file"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center gap-4">
+                          <FormLabel className="text-nowrap">File Quiz</FormLabel>
+                          <FormControl className="w-full">
+                            <Input
+                              type="file"
+                              onChange={(event) => {
+                                const file = event.target.files?.[0] || null;
+                                field.onChange(file);
+                              }}
+                              className="w-full"
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex justify-end">
+                    <Button type="submit" disabled={isCreateQuizPending}>
+                      Submit
+                    </Button>
+                  </div>
+                </form>
+              </Form>
             </div>
           </DialogContent>
         </Dialog>
       </section>
+
       <section className="py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {Array.from({ length: 8 }).map((_, index) => (
