@@ -29,7 +29,6 @@ const ClassDetailLayout = ({ children, params }: ClassDetailLayoutProps) => {
     async function fetchData() {
       try {
         const res = await getCourseByMentorId(user.mentorId, accessToken);
-        console.log("🚀 ~ fetchData ~ res:", res);
         if (!res.success) {
           toast.error("Get courses failed");
           return;

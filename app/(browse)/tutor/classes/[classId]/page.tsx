@@ -39,9 +39,7 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
             </div>
             <div className="flex items-center">
               📅 From {formatStartDate(courseDetail.startDate)}
-              <Badge variant={"secondary"} className="text-md ml-2">
-                {courseDetail.duration} months
-              </Badge>
+              <div className="text-md ml-2">{courseDetail.duration} months</div>
             </div>
             <Badge variant={"green"}>
               <a href={`https://${courseClassDetail?.meetUrl}`} target="_blank" rel="noopener noreferrer">

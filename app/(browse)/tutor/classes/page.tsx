@@ -33,8 +33,6 @@ const ClassPage = () => {
     fetchData();
   }, []);
 
-  console.log("🚀 ~ ClassPage ~ coursesList:", coursesList);
-
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
       <div className="w-full flex justify-end items-center mb-8">
@@ -56,11 +54,10 @@ const ClassPage = () => {
             />
             <div className="flex-1 flex flex-col items-end justify-between h-full">
               <p className="font-semibold">{courseItem?.courseName}</p>
-              <Badge variant={"green"}>{courseItem?.subjectName}</Badge>
+              <div>{courseItem?.subjectName}</div>
               <p>{courseItem?.numOfStudents} students</p>
               <p className="text-sm">
-                📅 {formatStartDate(courseItem?.startDate)}{" "}
-                <Badge variant={"secondary"}>{courseItem?.duration} month</Badge>
+                📅 {formatStartDate(courseItem?.startDate)} <div>{courseItem?.duration} month</div>
               </p>
             </div>
           </div>

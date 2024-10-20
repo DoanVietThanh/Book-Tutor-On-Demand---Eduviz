@@ -2,6 +2,7 @@
 
 import { getCourseClassDetail } from "@/actions/course/get-course-class-detail";
 import { getCourseDetail } from "@/actions/course/get-course-detail";
+import { getPersonalQuizScore } from "@/actions/quiz/get-personal-score";
 import { getQuizScore } from "@/actions/quiz/get-quiz-score";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,7 +16,7 @@ type TutorClassDetailProps = {
 };
 
 const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
-  const { user, accessToken } = useAuthContext();
+  const { user } = useAuthContext();
 
   const [courseDetail, setCourseDetail] = useState<any>();
   const [courseClassDetail, setCourseClassDetail] = useState<any>();
@@ -25,9 +26,9 @@ const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
     async function fetchData() {
       const courseDetail = await getCourseDetail(params.classId);
       const courseClassDetail = await getCourseClassDetail(params.classId);
-      const quizScore = await getQuizScore(user.userId, accessToken);
+      const quizScore = await getPersonalQuizScore(user.userId, params.classId);
 
-      setQuizScore(quizScore?.quizHistory);
+      setQuizScore(quizScore);
       setCourseDetail(courseDetail);
       setCourseClassDetail(courseClassDetail);
     }
@@ -83,14 +84,6 @@ const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* {courseClassDetail?.studentInfoList?.map((student: any, index: number) => (
-            <TableRow key={student?.studentId}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>{student.name}</TableCell>
-              <TableCell>{student.numOfTry}</TableCell>
-              <TableCell className="text-right">{student.score.toFixed(2) || 0}</TableCell>
-            </TableRow>
-          ))} */}
           {quizScore?.map((quiz: any, index: number) => (
             <TableRow key={quiz?.quizId}>
               <TableCell className="font-medium">{index + 1}</TableCell>

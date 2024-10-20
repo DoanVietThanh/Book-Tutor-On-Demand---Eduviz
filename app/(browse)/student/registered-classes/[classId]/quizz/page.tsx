@@ -27,7 +27,6 @@ const TutorQuizPage = ({ params }: TutorQuizPageProps) => {
     async function fetchData() {
       try {
         const response = await getRegisteredQuizByClassId(params.classId, accessToken);
-        console.log("🚀 ~ fetchData ~ response:", response);
         setQuizzes(response?.result?.quizzes || []);
       } catch (error) {
         console.error("Failed to fetch courses or quizes:", error);

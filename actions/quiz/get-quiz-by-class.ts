@@ -1,3 +1,5 @@
+"use server";
+
 import { isBaseError } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
@@ -10,6 +12,9 @@ export const getQuizByClass = async (classId: any, accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.json());
+
+    console.log("🚀 ~ getQuizByClass ~ response:", response);
+
     revalidatePath("/tutor/quizes-list");
     return response;
   } catch (error) {

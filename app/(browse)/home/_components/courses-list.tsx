@@ -59,7 +59,7 @@ const CoursesList = async () => {
                       </div>
                       <p className="flex justify-between font-medium">
                         <span>📅 {formatStartDate(course.startDate)}</span>
-                        <Badge variant={"secondary"}>{course.duration} months</Badge>
+                        <div>{course.duration} months</div>
                       </p>
                     </div>
                   </div>
@@ -71,7 +71,6 @@ const CoursesList = async () => {
       </div>
     );
   } catch (error) {
-    console.error("Error fetching courses:", error);
     return <div>Failed to load courses. Please try again later.</div>;
   }
 };
