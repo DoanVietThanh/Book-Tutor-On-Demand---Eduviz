@@ -29,6 +29,7 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
             width={240}
             height={400}
             className="rounded-md shadow-md"
+            priority
           />
           <div>
             <div className="text-2xl font-semibold"> {courseDetail.courseName}</div>
@@ -49,7 +50,6 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
           </div>
         </section>
       </div>
-
       <Table>
         <TableCaption>A list of registered students.</TableCaption>
         <TableHeader>
@@ -66,7 +66,7 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{student.name}</TableCell>
               <TableCell>{student.numOfTry}</TableCell>
-              <TableCell className="text-right">{student.score.toFixed(2) || 0}</TableCell>
+              <TableCell className="text-right">{student?.score || 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>

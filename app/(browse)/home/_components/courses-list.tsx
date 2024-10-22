@@ -28,9 +28,9 @@ const CoursesList = async () => {
         {coursesList.map((courseItem: { subjectName: string; listCourse: Course[] }) => (
           <div key={courseItem.subjectName} className="my-8">
             <section className="flex items-center justify-between">
-              <p className="text-2xl font-semibold">
+              <div className="text-2xl font-semibold">
                 {courseItem.subjectName} ({courseItem?.listCourse.length})
-              </p>
+              </div>
             </section>
 
             <section className="my-4 grid gap-8 md:grid-cols-4">
@@ -43,8 +43,8 @@ const CoursesList = async () => {
                         alt="Avatar"
                         width={160}
                         height={160}
-                        layout="intrinsic"
                         className="rounded-md"
+                        priority
                       />
                     </div>
                     <div className="flex flex-col justify-start gap-4 text-md">
@@ -54,13 +54,20 @@ const CoursesList = async () => {
                         by {course.mentorName}
                       </p>
                       <div className="flex items-center gap-2 text-yellow-700 font-semibold">
-                        <Image src="/icons/coin.png" width={24} height={24} className="object-cover" alt="coin" />
+                        <Image
+                          src="/icons/coin.png"
+                          width={24}
+                          height={24}
+                          className="object-cover"
+                          alt="coin"
+                          priority
+                        />
                         {course.price.toLocaleString()} / hour
                       </div>
-                      <p className="flex justify-between font-medium">
+                      <div className="flex justify-between font-medium">
                         <span>📅 {formatStartDate(course.startDate)}</span>
-                        <div>{course.duration} months</div>
-                      </p>
+                        <p>{course.duration} months</p>
+                      </div>
                     </div>
                   </div>
                 </Link>

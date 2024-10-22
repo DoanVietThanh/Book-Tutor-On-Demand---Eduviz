@@ -52,7 +52,7 @@ const SigninPage = () => {
       <div className="absolute top-0 left-0 w-full h-full backdrop-blur-md"></div>
       <div className="relative min-w-1/3 border min-h-[460px] p-4 rounded-lg shadow-lg bg-white bg-opacity-80 z-10">
         <div className="flex flex-col items-center justify-center p-8">
-          <Image src="/assets/logo.png" alt="logo" width={100} height={100} className="rounded-md" />
+          <Image src="/assets/logo.png" alt="logo" width={100} height={100} className="rounded-md" priority />
           <Link href="/home" className="text-3xl font-semibold my-4 text-blue-700 cursor-pointer">
             Welcome to EduViz
           </Link>

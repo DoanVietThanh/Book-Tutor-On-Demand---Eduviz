@@ -32,7 +32,7 @@ const TutorQuizPage = ({ params }: TutorQuizPageProps) => {
       <section className="py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {quizzes.length == 0 ? (
-            <div>No quizzes available at the moment.</div>
+            <div className="text-center text-nowrap">No quizzes available at the moment.</div>
           ) : (
             quizzes.map((quiz: any, index) => (
               <Link

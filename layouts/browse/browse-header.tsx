@@ -35,8 +35,8 @@ const BrowseHeader = () => {
             src="/assets/logo.png"
             alt="logo"
             width={30}
-            height={30}
-            className="rounded-xl transition-all duration-300 ease-in-out hover:scale-110"
+            height={0}
+            className="h-auto rounded-xl transition-all duration-300 ease-in-out hover:scale-110"
           />
           <div className="text-[#7A37FF]">Home Page</div>
         </Link>

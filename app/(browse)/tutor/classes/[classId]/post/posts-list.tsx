@@ -36,6 +36,7 @@ const PostsList = () => {
                   alt="Avatar"
                   layout="fill"
                   objectFit="contain" // You can also use "contain", "cover", "scale-down", etc.
+                  priority
                 />
               </div>
             </div>

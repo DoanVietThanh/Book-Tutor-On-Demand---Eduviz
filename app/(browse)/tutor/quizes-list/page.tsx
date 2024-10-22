@@ -71,11 +71,9 @@ const TutorQuizesList = () => {
 
         if (coursesList.length > 0) {
           const courseIds = coursesList.map((course: any) => course.courseId);
-          console.log("🚀 ~ fetchCourses ~ courseIds:", courseIds);
           const quizzesPromises = courseIds.map((courseId: string) => getQuizByClass(courseId, accessToken));
 
           const quizzes: any = await Promise.all(quizzesPromises);
-          console.log("🚀 ~ fetchCourses ~ quizzes:", quizzes);
           setQuizes(quizzes);
         } else {
           setQuizes([]);

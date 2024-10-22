@@ -1,4 +1,5 @@
 "use client";
+
 import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
 import CreateClassDialog from "@/components/dialogs/create-class-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -27,11 +28,11 @@ const ClassPage = () => {
 
         setCoursesList(res?.result?.listRelativeCourse as Course[]);
       } catch (error: any) {
-        toast.error(error?.message || "Something went wrong");
+        console.log(error);
       }
     }
     fetchData();
-  }, []);
+  }, [user?.mentorId]);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
@@ -51,13 +52,16 @@ const ClassPage = () => {
               width={100}
               height={100}
               className="rounded-md"
+              priority
             />
             <div className="flex-1 flex flex-col items-end justify-between h-full">
               <p className="font-semibold">{courseItem?.courseName}</p>
-              <div>{courseItem?.subjectName}</div>
+              <Badge variant={"green"}>
+                <div>{courseItem?.subjectName}</div>
+              </Badge>
               <p>{courseItem?.numOfStudents} students</p>
               <p className="text-sm">
-                📅 {formatStartDate(courseItem?.startDate)} <div>{courseItem?.duration} month</div>
+                📅 {formatStartDate(courseItem?.startDate)} <span>{courseItem?.duration} month</span>
               </p>
             </div>
           </div>

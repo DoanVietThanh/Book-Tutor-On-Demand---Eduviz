@@ -9,14 +9,14 @@ const StudentProfile = () => {
       <div className="bg-white p-4 rounded-lg">
         <section className="relative font-semibold">
           <div className="relative my-4 flex h-[440px] w-full items-center justify-center overflow-hidden rounded-3xl text-3xl shadow-lg">
-            <Image src="/assets/background.jpg" alt="banner" fill />
+            <Image src="/assets/background.jpg" alt="banner" fill priority />
           </div>
-          <Avatar className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 border-8 rounded-full border-white">
+          <Avatar className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 border-4 rounded-full border-white">
             <AvatarImage
               src="https://github.com/shadcn.png"
-              width={100}
-              height={100}
-              className="rounded-full overflow-hidden"
+              width={0}
+              height={0}
+              className="rounded-full overflow-hidden h-32 w-32"
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>

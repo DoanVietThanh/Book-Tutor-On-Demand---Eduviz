@@ -1,14 +1,12 @@
 "use client";
-import SearchClass from "@/components/search-class";
+import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuthContext } from "@/context/auth-provider";
+import { Course } from "@/types/course";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { ReactNode, useEffect, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Course } from "@/types/course";
-import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
+import { ReactNode, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type ClassDetailLayoutProps = {
@@ -21,25 +19,27 @@ const ClassDetailLayout = ({ children, params }: ClassDetailLayoutProps) => {
   const { user, accessToken } = useAuthContext();
   const [coursesList, setCoursesList] = useState<Course[]>([]);
 
-  if (!user) {
-    return router.push("/signin");
-  }
-
+  // Ensure user is logged in before accessing user properties
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await getCourseByMentorId(user.mentorId, accessToken);
-        if (!res.success) {
-          toast.error("Get courses failed");
-          return;
+        if (user && user.mentorId) {
+          const res = await getCourseByMentorId(user.mentorId, accessToken);
+          if (!res.success) {
+            toast.error("Get courses failed");
+            return;
+          }
+          setCoursesList(res?.result?.listRelativeCourse as Course[]);
         }
-        setCoursesList(res?.result?.listRelativeCourse as Course[]);
       } catch (error: any) {
         toast.error(error?.message || "Something went wrong");
       }
     }
-    fetchData();
-  }, []);
+
+    if (user && accessToken) {
+      fetchData();
+    }
+  }, [user, accessToken]);
 
   return (
     <div className="overflow-y-auto p-4">
