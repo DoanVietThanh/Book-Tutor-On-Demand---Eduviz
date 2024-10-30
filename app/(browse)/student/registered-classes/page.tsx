@@ -19,7 +19,7 @@ const StudentRegisteredClasses = () => {
   useEffect(() => {
     const fetchRegisteredClasses = async () => {
       try {
-        const classes = await getRegisteredClasses(user.userId, accessToken);
+        const classes = await getRegisteredClasses(user?.userId, accessToken);
         setRegisteredClasses(classes);
       } catch (err) {
         setError("Failed to fetch classes.");
@@ -28,7 +28,7 @@ const StudentRegisteredClasses = () => {
       }
     };
     fetchRegisteredClasses();
-  }, [user.userId, accessToken]);
+  }, [user?.userId, accessToken]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally, you can add a loading spinner here
