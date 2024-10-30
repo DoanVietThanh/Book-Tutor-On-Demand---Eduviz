@@ -129,12 +129,12 @@ const CreateClassDialog = () => {
     >
       <Button asChild variant={"destructive"}>
         <DialogTrigger className="flex items-center gap-4">
-          <PlusCircle /> New Course
+          <PlusCircle /> New Class
         </DialogTrigger>
       </Button>
       <DialogContent className="sm:max-w-[425px] md:max-w-[1200px] m-8">
         <DialogHeader>
-          <DialogTitle>Create a new course</DialogTitle>
+          <DialogTitle>Create a new class</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-2">
@@ -152,7 +152,7 @@ const CreateClassDialog = () => {
             </div>
             <div className="flex justify-end">
               <Button type="submit" disabled={isPending}>
-                Create Course
+                Create class
               </Button>
             </div>
           </form>

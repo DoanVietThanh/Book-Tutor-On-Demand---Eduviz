@@ -14,6 +14,7 @@ const TutorClassDetail = async ({ params }: TutorClassDetailProps) => {
   const courseDetail: Course = await getCourseDetail(params.classId);
 
   const courseClassDetail = await getCourseClassDetail(params.classId);
+  console.log("🚀 ~ TutorClassDetail ~ courseClassDetail:", courseClassDetail);
 
   if (!courseDetail || !courseClassDetail) {
     return <div>Course not found</div>;

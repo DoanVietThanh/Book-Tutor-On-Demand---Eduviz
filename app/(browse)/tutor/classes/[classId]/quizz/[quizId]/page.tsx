@@ -23,6 +23,8 @@ const QuizDetail = ({ params }: QuizDetailProps) => {
     async function fetchData() {
       try {
         const response = await getQuizDetail(params.quizId, accessToken);
+        console.log("🚀 ~ fetchData ~ response:", response);
+
         const convertedAnswers = convertToAnswersFormat(response?.result?.questionList);
         setAnswersQuiz(convertedAnswers);
       } catch (error) {

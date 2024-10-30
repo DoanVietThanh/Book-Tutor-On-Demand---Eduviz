@@ -1,9 +1,7 @@
 "use client";
+import { createQuiz } from "@/actions/quiz/create-quiz";
+import { getQuizzesByMentorId } from "@/actions/quiz/get-quizzes-by-mentorId";
 import { Button } from "@/components/ui/button";
-import { Download, PlusCircle } from "lucide-react";
-import React, { useEffect, useState, useTransition } from "react";
-import { saveAs } from "file-saver";
-import { Document, Packer, Paragraph, TextRun } from "docx";
 import {
   Dialog,
   DialogContent,
@@ -12,21 +10,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { useAuthContext } from "@/context/auth-provider";
-import { toast } from "sonner";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getCurrentTime } from "@/lib/utils";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuthContext } from "@/context/auth-provider";
+import { getCurrentTime } from "@/lib/utils";
 import { Course } from "@/types/course";
-import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
-import { createQuiz } from "@/actions/quiz/create-quiz";
-import { getQuizByClass } from "@/actions/quiz/get-quiz-by-class";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from "file-saver";
+import { Download, PlusCircle } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState, useTransition } from "react";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 type CreateQuizRequest = {
   quizTitle: string;
@@ -62,29 +61,19 @@ const TutorQuizesList = () => {
   });
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchQuizzes = async () => {
       try {
-        const response = await getCourseByMentorId(user.mentorId, accessToken);
-        const coursesList = response?.result?.listRelativeCourse || [];
+        const response = await getQuizzesByMentorId(user.mentorId, accessToken);
+        console.log("🚀 ~ fetchQuizzes ~ response?.result?.quizzes:", response?.result?.quizzes);
 
-        setCourses(coursesList);
-
-        if (coursesList.length > 0) {
-          const courseIds = coursesList.map((course: any) => course.courseId);
-          const quizzesPromises = courseIds.map((courseId: string) => getQuizByClass(courseId, accessToken));
-
-          const quizzes: any = await Promise.all(quizzesPromises);
-          setQuizes(quizzes);
-        } else {
-          setQuizes([]);
-        }
+        setQuizes(response?.result?.quizzes || []);
       } catch (error) {
         console.error("Failed to fetch courses or quizzes:", error);
       }
     };
 
     if (user?.mentorId && accessToken) {
-      fetchCourses();
+      fetchQuizzes();
     }
   }, [user?.mentorId, accessToken]);
 
@@ -145,8 +134,6 @@ const TutorQuizesList = () => {
       }
     });
   }
-
-  console.log("🚀 ~ TutorQuizesList ~ quizes:", quizes);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
@@ -297,7 +284,7 @@ const TutorQuizesList = () => {
       <section className="py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {quizes.length == 0 ? (
-            <p className="text-center font-semibold text-2xl text-red-700">No quizes found</p>
+            <p className="text-center font-semibold text-2xl text-red-700">Quizes not found</p>
           ) : (
             quizes.map((quiz: any, index) => (
               <Link
@@ -305,11 +292,13 @@ const TutorQuizesList = () => {
                 key={index}
                 className="text-sm bg-white p-4 rounded-md shadow-lg cursor-pointer"
               >
-                <p className="font-semibold">Quiz Name {index + 1}</p>
+                <p className="font-semibold">{quiz?.quizTitle}</p>
                 <p className="text-sm text-green-500">
-                  {1 + Math.floor(Math.random() * 50)} questions - {1 + Math.floor(Math.random() * 50)} minutes
+                  {quiz?.numOfQuestion} questions - {quiz?.duration} minutes
                 </p>
-                <p>Done: {1 + Math.floor(Math.random() * 50)} / 50 students </p>
+                <p>
+                  Done: {quiz.numOfStuAttempt} / {quiz.totalStudent} students
+                </p>
               </Link>
             ))
           )}

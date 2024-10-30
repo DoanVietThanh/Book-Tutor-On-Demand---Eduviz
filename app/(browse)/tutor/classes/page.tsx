@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { useAuthContext } from "@/context/auth-provider";
 import { formatStartDate } from "@/lib/utils";
 import { Course } from "@/types/course";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -46,20 +45,15 @@ const ClassPage = () => {
             onClick={() => router.push(`/tutor/classes/${courseItem.courseId}`)}
             className="flex cursor-pointer rounded-md border bg-white p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105"
           >
-            <Image
+            <img
               src={courseItem?.picture || "/assets/avatar-tutor.png"}
               alt="Avatar"
-              width={100}
-              height={100}
-              className="rounded-md"
-              priority
+              className="rounded-md w-1/3 h-full object-cover"
             />
-            <div className="flex-1 flex flex-col items-end justify-between h-full">
+            <div className="flex-1 flex flex-col items-end justify-between h-full gap-2">
               <p className="font-semibold">{courseItem?.courseName}</p>
-              <Badge variant={"green"}>
-                <div>{courseItem?.subjectName}</div>
-              </Badge>
-              <p>{courseItem?.numOfStudents} students</p>
+              <Badge variant={"green"}>{courseItem?.subjectName}</Badge>
+              <p className="text-sm">{courseItem?.numOfStudents} students</p>
               <p className="text-sm">
                 📅 {formatStartDate(courseItem?.startDate)} <span>{courseItem?.duration} month</span>
               </p>

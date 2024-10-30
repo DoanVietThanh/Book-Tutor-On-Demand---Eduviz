@@ -6,26 +6,36 @@ import { Badge } from "@/components/ui/badge";
 import { useAuthContext } from "@/context/auth-provider";
 import { formatStartDate } from "@/lib/utils";
 import { Course } from "@/types/course";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const StudentRegisteredClasses = async () => {
+const StudentRegisteredClasses = () => {
   const router = useRouter();
   const { user, accessToken } = useAuthContext();
-
   const [registeredClasses, setRegisteredClasses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchRegisteredClasses() {
-      const classes = await getRegisteredClasses(user.userId, accessToken);
-      setRegisteredClasses(classes);
-    }
+    const fetchRegisteredClasses = async () => {
+      try {
+        const classes = await getRegisteredClasses(user.userId, accessToken);
+        setRegisteredClasses(classes);
+      } catch (err) {
+        setError("Failed to fetch classes.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchRegisteredClasses();
-  }, []);
+  }, [user.userId, accessToken]);
 
-  if (!registeredClasses) {
-    return null;
+  if (loading) {
+    return <div>Loading...</div>; // Optionally, you can add a loading spinner here
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Display error message if there's an error
   }
 
   return (
@@ -40,21 +50,19 @@ const StudentRegisteredClasses = async () => {
             onClick={() => router.push(`/student/registered-classes/${registeredClass.courseId}`)}
             className="flex cursor-pointer rounded-md border bg-white p-4 shadow-md transition-all duration-300 ease-in-out hover:scale-105"
           >
-            <Image
+            <img
               src={registeredClass.picture || "/assets/avatar-tutor.png"}
               alt="Avatar"
-              width={100}
-              height={100}
-              className="rounded-md"
+              className="rounded-md w-1/3 h-full object-cover"
             />
             <div className="flex-1 flex flex-col items-end justify-between h-full">
               <p className="font-semibold">{registeredClass.courseName}</p>
               <Badge variant={"green"}>{registeredClass.subjectName}</Badge>
               <p>{registeredClass.numOfStudents} students</p>
-              <p className="text-md">
+              <div className="text-md">
                 📅 {formatStartDate(registeredClass.startDate)}
                 <Badge variant={"secondary"}>{registeredClass.duration} month</Badge>
-              </p>
+              </div>
             </div>
           </div>
         ))}

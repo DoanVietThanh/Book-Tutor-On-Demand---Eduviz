@@ -9,6 +9,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { useAuthContext } from "@/context/auth-provider";
 import { formatStartDate } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type TutorClassDetailProps = {
@@ -38,6 +39,8 @@ const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
   if (!courseDetail || !courseClassDetail) {
     return <div>Course not found</div>;
   }
+
+  console.log("🚀 ~ TutorClassDetail ~ quizScore:", quizScore);
 
   return (
     <div className="pt-4 overflow-y-auto">
@@ -81,18 +84,27 @@ const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
             <TableHead>Email</TableHead>
             <TableHead>Duration</TableHead>
             <TableHead className="text-right">Point</TableHead>
+            <TableHead className="text-right">Detail</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {quizScore?.map((quiz: any, index: number) => (
-            <TableRow key={quiz?.quizId}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>{user?.name}</TableCell>
-              <TableCell>{user?.email}</TableCell>
-              <TableCell>{quiz?.duration}</TableCell>
-              <TableCell className="text-right">{quiz?.score}</TableCell>
-            </TableRow>
-          ))}
+          {quizScore &&
+            quizScore?.map((quiz: any, index: number) => (
+              <TableRow key={quiz?.studentQuizScoreId}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{user?.name}</TableCell>
+                <TableCell>{user?.email}</TableCell>
+                <TableCell>{quiz?.duration}</TableCell>
+                <TableCell className="text-right">{quiz?.score}</TableCell>
+                <TableCell className="text-right">
+                  <Link
+                    href={`/student/quiz-history?studentId=${quiz?.userId}&studentQuizScoreId=${quiz?.studentQuizScoreId}`}
+                  >
+                    Detail
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </div>
