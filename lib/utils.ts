@@ -26,6 +26,10 @@ export const getCurrentTime = (increaseHours: number = 0) => {
   return `${hours}:${minutes}:${seconds}`;
 };
 
+export const getTimeDefault = () => {
+  return "00:00:00";
+};
+
 export const formatStartDate = (date: string) => {
   const dateObj = new Date(date);
   const day = String(dateObj.getDate()).padStart(2, "0");

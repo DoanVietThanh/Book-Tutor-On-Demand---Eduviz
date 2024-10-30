@@ -9,7 +9,7 @@ import { z } from "zod";
 import CourseNameField from "./courseName-field";
 import SubjectNameField from "./subjectName-field";
 import PriceField from "./price-field";
-import { getCurrentDate, getCurrentTime } from "@/lib/utils";
+import { getCurrentDate, getCurrentTime, getTimeDefault } from "@/lib/utils";
 import StartDateField from "./startDate-field";
 import MonthDurationField from "./monthDuration-field";
 import TimeClassField from "./timeClass-field";
@@ -21,6 +21,7 @@ import { useAuthContext } from "@/context/auth-provider";
 import { uploadImage } from "@/actions/course/upload-image";
 import { useState, useTransition } from "react";
 import MeetUrlField from "./meet-url-field";
+import { useRouter } from "next/navigation";
 
 export type FormRequest = {
   courseName: string;
@@ -53,12 +54,20 @@ const formSchema = z.object({
   monthDuration: z.coerce.number().min(1, {
     message: "Month duration must be at least 1 month.",
   }),
-  beginingClass: z.string({
-    required_error: "Begining class time is required.",
-  }),
-  endingClass: z.string({
-    required_error: "Ending class time is required.",
-  }),
+  beginingClass: z
+    .string({
+      required_error: "Beginning class time is required.",
+    })
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+      message: "Beginning class time must be in HH:mm format.",
+    }),
+  endingClass: z
+    .string({
+      required_error: "Ending class time is required.",
+    })
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+      message: "Ending class time must be in HH:mm format.",
+    }),
   weekSchedule: z.array(z.string()),
   meetUrl: z
     .string({
@@ -69,6 +78,7 @@ const formSchema = z.object({
 });
 
 const CreateClassDialog = () => {
+  const router = useRouter();
   const { accessToken } = useAuthContext();
   const [open, setOpen] = useState(false);
   const [isPending, startCreateCourse] = useTransition();
@@ -81,8 +91,8 @@ const CreateClassDialog = () => {
       price: 11000,
       startDate: getCurrentDate(),
       monthDuration: 1,
-      beginingClass: getCurrentTime(),
-      endingClass: getCurrentTime(2),
+      beginingClass: "",
+      endingClass: "",
       meetUrl: "",
       weekSchedule: ["Monday", "Wednesday", "Friday"],
       picture: undefined,
@@ -100,6 +110,8 @@ const CreateClassDialog = () => {
               price: values.price.toString(),
               monthDuration: values.monthDuration.toString(),
               picture: uploadedImage?.result?.imageUrl,
+              beginingClass: values.beginingClass + ":00",
+              endingClass: values.endingClass + ":00",
             },
             accessToken
           );
@@ -109,12 +121,14 @@ const CreateClassDialog = () => {
             toast.success("Create course successfully");
             form.reset();
             setOpen(false);
+            router.refresh();
           }
         } else {
           toast.error("Upload picture of Course failed");
         }
       });
     } catch (error: any) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error?.message || "Something went wrong");
     }
   }

@@ -62,7 +62,7 @@ const CoursesList = async () => {
                           alt="coin"
                           priority
                         />
-                        {course.price.toLocaleString()} / hour
+                        {course.price.toLocaleString()}
                       </div>
                       <div className="flex justify-between font-medium">
                         <span>📅 {formatStartDate(course.startDate)}</span>

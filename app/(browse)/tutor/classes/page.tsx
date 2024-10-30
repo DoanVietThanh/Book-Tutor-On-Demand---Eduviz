@@ -31,7 +31,7 @@ const ClassPage = () => {
       }
     }
     fetchData();
-  }, [user?.mentorId]);
+  }, [user?.mentorId, accessToken]);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto">
