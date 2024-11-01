@@ -1,4 +1,5 @@
 "use client";
+import { getCourseByMentorId } from "@/actions/course/get-course-by-mentorId";
 import { createQuiz } from "@/actions/quiz/create-quiz";
 import { getQuizzesByMentorId } from "@/actions/quiz/get-quizzes-by-mentorId";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,9 @@ const TutorQuizesList = () => {
       try {
         const response = await getQuizzesByMentorId(user.mentorId, accessToken);
         console.log("🚀 ~ fetchQuizzes ~ response?.result?.quizzes:", response?.result?.quizzes);
+        const course = await getCourseByMentorId(user.mentorId, accessToken);
+        console.log("🚀 ~ fetchQuizzes ~ course:", course);
+        setCourses(course?.result?.listRelativeCourse as Course[]);
 
         setQuizes(response?.result?.quizzes || []);
       } catch (error) {
@@ -123,14 +127,15 @@ const TutorQuizesList = () => {
     startCreateQuiz(async () => {
       try {
         const res = await createQuiz(values, accessToken);
-        if (!res.success) {
-          toast.error(res?.result.message || "Create quiz failed");
-          return;
-        }
+        // if (!res.success) {
+        //   toast.error(res?.result.message || "Create quiz failed");
+        //   return;
+        // }
         toast.success("Create quiz successfully");
         form.reset();
       } catch (error) {
-        toast.error("Something went wrong");
+        console.log("🚀 ~ startCreateQuiz ~ error:", error);
+        // toast.error("Something went wrong");
       }
     });
   }

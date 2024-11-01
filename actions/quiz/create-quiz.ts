@@ -3,8 +3,6 @@ import { revalidatePath } from "next/cache";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 export const createQuiz = async (values: any, accessToken: string) => {
-  console.log("🚀 ~ createQuiz ~ accessToken:", accessToken);
-  console.log("🚀 ~ createQuiz ~ values:", values);
   try {
     const formData = new FormData();
     formData.append("quizTitle", values.quizTitle);
