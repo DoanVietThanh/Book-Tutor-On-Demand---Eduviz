@@ -40,8 +40,6 @@ const TutorClassDetail = ({ params }: TutorClassDetailProps) => {
     return <div>Course not found</div>;
   }
 
-  console.log("🚀 ~ TutorClassDetail ~ quizScore:", quizScore);
-
   return (
     <div className="pt-4 overflow-y-auto">
       <div className="flex justify-center mb-8">

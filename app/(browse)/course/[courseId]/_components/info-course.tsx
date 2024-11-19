@@ -1,18 +1,19 @@
 "use client";
-import { getRelatedCourses } from "@/actions/course/get-related-courses";
+import { purchaseCourse } from "@/actions/payment/purchase-course";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import Image from "next/image";
-import React, { useState, useTransition } from "react";
-import FeedbacksList from "./feedbacks-list";
+import { useAuthContext } from "@/context/auth-provider";
+import { ROLES } from "@/enum";
 import { formatStartDate } from "@/lib/utils";
 import { Course } from "@/types/course";
-import { ShoppingBag, ShoppingCart } from "lucide-react";
-import { toast } from "sonner";
-import { purchaseCourse } from "@/actions/payment/purchase-course";
-import { useAuthContext } from "@/context/auth-provider";
+import { Send, ShoppingCart, Star } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ROLES } from "@/enum";
+import { Suspense, useState, useTransition } from "react";
+import { toast } from "sonner";
+import FeedbacksList from "./feedbacks-list";
+import { Textarea } from "@/components/ui/textarea";
+import { createCommentCourse } from "@/actions/course/create-comments";
 
 type TutorInfoProps = {
   courseId: string;
@@ -24,12 +25,14 @@ const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) 
   const { accessToken, role } = useAuthContext();
   const router = useRouter();
   const [isPending, startPurchaseCourse] = useTransition();
+  const [isPendingComment, startComment] = useTransition();
+  const [comment, setComment] = useState<string>("");
+  const [rate, setRate] = useState<number>(5);
 
   const handleBuyCourse = () => {
     try {
       startPurchaseCourse(async () => {
         const res = await purchaseCourse(courseId, accessToken);
-
         if (!res.success) {
           toast.error(res?.result?.message || "Upgrade Premium Account failed");
           return;
@@ -40,6 +43,27 @@ const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) 
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
     }
+  };
+
+  const handleComment = async () => {
+    if (!comment) {
+      toast.info("Please enter a comment");
+      return;
+    }
+
+    startComment(async () => {
+      try {
+        const res = await createCommentCourse({ comment, rate }, accessToken, courseId);
+        if (!res.success) {
+          toast.error(res?.result?.message || "Comment failed");
+          return;
+        }
+        toast.success("Comment successfully");
+        router.push(`/course/${courseId}`);
+      } catch (error: any) {
+        toast.error(error.message || "Something went wrong");
+      }
+    });
   };
 
   return (
@@ -159,7 +183,35 @@ const InfoCourse = ({ courseId, courseDetail, relatedCourses }: TutorInfoProps) 
           </div>
         </div>
       </section>
-      <FeedbacksList />
+      <section className="flex flex-col gap-4">
+        <Textarea onChange={(e) => setComment(e.target.value)} value={comment} placeholder="Leave a comment" />
+        <div className="flex flex-col justify-end items-end gap-4">
+          <div className="flex">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div
+                key={index}
+                className={`cursor-pointer flex items-center gap-2 ${
+                  rate >= index + 1 ? "text-yellow-500" : "text-gray-400"
+                }`}
+                onClick={() => setRate(index + 1)}
+              >
+                <Star />
+              </div>
+            ))}
+          </div>
+          <Button
+            variant={"outline"}
+            disabled={isPendingComment}
+            onClick={handleComment}
+            className="flex items-center gap-2 text-xl font-semibold shadow-lg border-2 "
+          >
+            <Send /> Send
+          </Button>
+        </div>
+      </section>
+      <Suspense fallback={<div>Loading feedbacks...</div>}>
+        <FeedbacksList courseId={courseId} />
+      </Suspense>
     </div>
   );
 };

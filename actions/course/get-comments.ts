@@ -1,21 +1,20 @@
 "use server";
 
 import { isBaseError } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-export const getQuizByClass = async (classId: any, accessToken: string) => {
+
+export const getCommentCourse = async (courseId: string) => {
   try {
-    const response = await fetch(`${ServerURL}/course/${classId}/quizzes`, {
+    const response = await fetch(`${ServerURL}/course/${courseId}/comment`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
+      cache: "no-store",
     }).then((res) => res.json());
-
-    revalidatePath("/tutor/quizes-list");
-    return response;
-  } catch (error) {
+    return response.result;
+  } catch (error: any) {
     let messageError = "";
     if (!isBaseError(error) || error.statusCode === 500) {
       messageError = "Something went wrong";

@@ -128,7 +128,6 @@ const CreateClassDialog = () => {
         }
       });
     } catch (error: any) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
       toast.error(error?.message || "Something went wrong");
     }
   }
@@ -160,7 +159,7 @@ const CreateClassDialog = () => {
               <MonthDurationField form={form} />
               <StartDateField form={form} />
               <TimeClassField form={form} name={"beginingClass"} />
-              <TimeClassField form={form} name={"endingClass"} />\
+              <TimeClassField form={form} name={"endingClass"} />
               <MeetUrlField form={form} />
               <PictureField form={form} />
             </div>

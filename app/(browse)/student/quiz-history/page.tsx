@@ -5,12 +5,8 @@ import { useAuthContext } from "@/context/auth-provider";
 import { Separator } from "@radix-ui/react-select";
 import { ArrowBigLeft, Check, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
-type StudentQuizHistoryProps = {
-  searchParams: string;
-};
 
 const StudentQuizHistory = () => {
   const searchParams = useSearchParams();
@@ -30,8 +26,6 @@ const StudentQuizHistory = () => {
     }
     fetchData();
   }, [studentId, studentQuizScoreId]);
-
-  console.log("🚀 ~ StudentQuizHistory ~ quizHistoryDetail:", quizHistoryDetail);
 
   return (
     <div className="p-4 h-full bg-slate-50 overflow-y-auto container">

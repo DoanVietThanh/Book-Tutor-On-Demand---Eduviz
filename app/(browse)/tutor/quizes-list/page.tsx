@@ -65,11 +65,8 @@ const TutorQuizesList = () => {
     const fetchQuizzes = async () => {
       try {
         const response = await getQuizzesByMentorId(user.mentorId, accessToken);
-        console.log("🚀 ~ fetchQuizzes ~ response?.result?.quizzes:", response?.result?.quizzes);
         const course = await getCourseByMentorId(user.mentorId, accessToken);
-        console.log("🚀 ~ fetchQuizzes ~ course:", course);
         setCourses(course?.result?.listRelativeCourse as Course[]);
-
         setQuizes(response?.result?.quizzes || []);
       } catch (error) {
         console.error("Failed to fetch courses or quizzes:", error);

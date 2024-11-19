@@ -6,8 +6,6 @@ const ServerURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getPersonalQuizScore = async (userId: string, courseId: string) => {
   try {
-    console.log("🚀 ~ getPersonalQuizScore ~ userId:", userId);
-    console.log("🚀 ~ getPersonalQuizScore ~ courseId:", courseId);
     const response = await fetch(`${ServerURL}/quiz/history?studentId=${userId}&courseId=${courseId}`, {
       method: "GET",
       headers: {

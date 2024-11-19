@@ -4,16 +4,17 @@ import { isBaseError } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 
 const ServerURL = process.env.NEXT_PUBLIC_API_URL;
-export const getQuizByClass = async (classId: any, accessToken: string) => {
+export const createCommentCourse = async (data: any, accessToken: string, courseId: string) => {
   try {
-    const response = await fetch(`${ServerURL}/course/${classId}/quizzes`, {
-      method: "GET",
+    const response = await fetch(`${ServerURL}/course/${courseId}/comment`, {
+      method: "POST",
+      body: JSON.stringify(data),
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res) => res.json());
-
-    revalidatePath("/tutor/quizes-list");
+    revalidatePath(`/course/${courseId}`);
     return response;
   } catch (error) {
     let messageError = "";
