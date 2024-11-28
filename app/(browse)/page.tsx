@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { ChartCarsSession } from "@/components/ChartCarsSession";
 
 const WelcomePage = () => {
   const router = useRouter();
@@ -15,10 +16,10 @@ const WelcomePage = () => {
 
   return (
     <div className="flex flex-1 items-center justify-center">
-      {/* This button will still be available as a fallback or for testing */}
       <Button asChild variant={"outline"}>
         <Link href="/home">Welcome to EduViz</Link>
       </Button>
+      {/* <ChartCarsSession /> */}
     </div>
   );
 };
